@@ -9,3 +9,4 @@ AllowShortFunctionsOnASingleLine: Inline
 PointerAlignment: Right
 BreakBeforeBraces: Allman
 AllowShortIfStatementsOnASingleLine: true
+IndentCaseLabels: false
