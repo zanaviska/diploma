@@ -7,3 +7,4 @@ TabWidth: 4
 Language: Cpp
 AllowShortFunctionsOnASingleLine: Inline
 PointerAlignment: Right
+BreakBeforeBraces: Allman
