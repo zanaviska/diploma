@@ -12,3 +12,4 @@ AllowShortIfStatementsOnASingleLine: true
 IndentCaseLabels: false
 ColumnLimit: 100
 BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
