@@ -10,3 +10,4 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 project(project)
 
 
+file(MAKE_DIRECTORY bin)
