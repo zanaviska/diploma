@@ -11,3 +11,5 @@ project(project)
 
 
 file(MAKE_DIRECTORY bin)
+
+
