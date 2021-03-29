@@ -13,3 +13,4 @@ project(project)
 file(MAKE_DIRECTORY bin)
 
 
+add_subdirectory(src)
