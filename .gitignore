@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# build folder
+build
+
 # Compiled Object files
 *.slo
 *.lo
@@ -32,11 +35,6 @@
 *.app
 
 # vim files
-
-
-
-
-
 
 # Swap
 [._]*.s[a-v][a-z]
