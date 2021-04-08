@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "D:/opencv/build/install/include"
+                "C:\\opencv\\build\\install\\include",
+                "${workspaceFolder}/include"
             ],
             "defines": [],
             "compilerPath": "D:/mingw64/bin/g++.exe",

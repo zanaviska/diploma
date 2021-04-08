@@ -9,9 +9,8 @@ project(project)
 find_package(OpenCV REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
 file(MAKE_DIRECTORY bin)
 
 add_subdirectory(src)
-
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
