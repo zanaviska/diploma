@@ -6,9 +6,16 @@ TabWidth: 4
 Language: Cpp
 AllowShortFunctionsOnASingleLine: Inline
 PointerAlignment: Right
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Custom
 AllowShortIfStatementsOnASingleLine: true
 IndentCaseLabels: false
 ColumnLimit: 100
 BreakConstructorInitializers: AfterColon
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BraceWrapping:
+  BeforeLambdaBody: false
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+
