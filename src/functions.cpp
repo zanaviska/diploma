@@ -1,7 +1,9 @@
 #include <algorithm>
-#include <functions.h>
+#include <iostream>
 
 #include <opencv2/imgproc.hpp>
+
+#include <functions.h>
 
 // offset between points, to be equal
 constexpr size_t threshold = 10;
@@ -41,6 +43,7 @@ std::vector<line> get_lines(cv::Mat src)
 
 std::shared_ptr<terminal> make_terminal(const std::vector<line> &lines, size_t upper, size_t lower)
 {
+    std::cout << "\nAdded terminal1\n";
     const line &up_line = lines[upper];
     const line &lo_line = lines[lower];
 
@@ -49,16 +52,19 @@ std::shared_ptr<terminal> make_terminal(const std::vector<line> &lines, size_t u
         up_line.first.x < up_line.second.x ? up_line.first : up_line.second,
         lo_line.second.x < lo_line.first.x ? lo_line.first : lo_line.second);
 
-    // if our terminal isn't last that add child
-    if (lines.size() != lower - 1)
-        for(size_t i = 1; i < lines.size(); i++)
+//    std::cout << "our line:\n";
+//    std::cout << lo_line.first << ' ' << lo_line.second << "\n\n";
+    // if our terminal isn't last that add child(flowline)
+    if (lines.size() != lower + 1)
+        for(size_t i = 2; i < lines.size(); i++)
         {
+//            std::cout << lines[i].first << ' ' << lines[i].second << '\n';
             if (on_line(lo_line, lines[i].first)) {
                 res->child = make_flowline(lines,i, lines[i].first, lines[i].second);
                 break;
             }
             if (on_line(lo_line, lines[i].second)) {
-                res->child = make_flowline(lines, i, lines[i].second, lines[i].second);
+                res->child = make_flowline(lines, i, lines[i].second, lines[i].first);
                 break;
             }
         }
@@ -68,11 +74,14 @@ std::shared_ptr<terminal> make_terminal(const std::vector<line> &lines, size_t u
 std::shared_ptr<flowline> make_flowline(const std::vector<line> &lines, size_t index,
                                         cv::Point start, cv::Point end)
 {
-    //create flowline
-    auto res = std::make_shared<flowline>(start, end);
+    std::cout << "Added flowline\n";
 
+    //create flowline
+    auto res = std::make_shared<flowline>(std::move(start), end);
+
+//    std::cout << "end: " << end << '\n';
     //if next element is flowline
-    for(size_t i = 1; i < lines.size(); i++)
+    for(size_t i = 2; i < lines.size(); i++)
         if(i != index)
         {
             if(is_equal(end, lines[i].first))
@@ -86,11 +95,15 @@ std::shared_ptr<flowline> make_flowline(const std::vector<line> &lines, size_t i
                 return res;
             }
         }
-    for(size_t i = 1; i < lines.size(); i++)
+    //if next element is terminal
+    for(size_t i = 2; i < lines.size(); i++)
+    {
+//        std::cout << lines[i].first << ' ' << lines[i].first << ' ' << lines[i].second << '\n';
         if(on_line(lines[i], end))
         {
             res->child = make_terminal(lines, i, lines.size() - 1);
             return res;
         }
+    }
     return res;
 }

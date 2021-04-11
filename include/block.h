@@ -13,7 +13,7 @@ protected:
     };
     const block_type _type;
 
-    block(block_type type): _type{type} {}
+    explicit block(block_type type): _type{type} {}
 };
 
 #endif // PROJECT_BLOCK_H

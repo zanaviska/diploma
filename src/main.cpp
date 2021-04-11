@@ -9,18 +9,10 @@
 #include <functions.h>
 #include <terminal.h>
 
-using namespace cv;
-using namespace std;
-
-void print(std::shared_ptr<block> now)
-{
-    if()
-}
-
 int main(int argc, char **argv)
 {
     // Loads an image
-    cv::Mat src = imread("../flowchart1.jpg", IMREAD_GRAYSCALE);
+    cv::Mat src = cv::imread("../flowchart1.jpg", cv::IMREAD_GRAYSCALE);
     // Check if image is loaded fine
     if (src.empty()) {
         printf(" Error opening image\n");
@@ -30,6 +22,7 @@ int main(int argc, char **argv)
     auto lines = get_lines(src);
     if (lines.size() < 3) return -1;
 
+    //sort elements and remove duplicates
     std::sort(lines.begin(), lines.end(), [](auto lhs, auto rhs) {
         if (std::min(lhs.first.y, lhs.second.y) < std::min(rhs.first.y, rhs.second.y)) return true;
         if (std::min(lhs.first.y, lhs.second.y) > std::min(rhs.first.y, rhs.second.y)) return false;
@@ -37,15 +30,35 @@ int main(int argc, char **argv)
         if (std::max(lhs.first.y, lhs.second.y) > std::max(rhs.first.y, rhs.second.y)) return false;
         return std::min(lhs.first.x, lhs.second.x) < std::min(lhs.first.x, lhs.second.x);
     });
+    auto it = std::unique(lines.begin(), lines.end(), [](line lhs, line rhs) {
+        return (is_equal(lhs.first, rhs.first) && is_equal(lhs.second, rhs.second)) ||
+               (is_equal(lhs.first, rhs.second) && is_equal(lhs.second, rhs.first));
+    });
+    lines.erase(it, lines.end());
 
-    cv::Point tl = lines[0].first;
-    if (tl.x > lines[0].second.x) tl = lines[0].second;
+    std::cout << "lines\n";
+    for (auto &i : lines)
+    std::cout << i.first << ' ' << i.second << '\n';
+
+    cv::Mat clone;
+    cv::cvtColor(src, clone, cv::COLOR_GRAY2BGR);
+    for (size_t i = 0; i < lines.size(); i++)
+        switch (i) {
+        case 0:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 255, 0), 2);
+            break;
+
+        default:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 0, 0), 2);
+        }
+    cv::imshow("", clone);
+
     if (std::abs(lines[1].first.y - lines[1].second.y) >
         std::abs(lines[2].first.y - lines[2].second.y))
         std::swap(lines[1], lines[2]);
-    cv::Point br = lines[1].first;
-    if (br.x < lines[1].second.x) br = lines[1].second;
-    std::unique_ptr<block> start = std::unique_ptr<block>(new terminal(tl, br));
 
+    auto start = make_terminal(lines, 0, 1);
+
+    cv::waitKey();
     return 0;
 }
