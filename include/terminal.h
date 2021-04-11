@@ -5,14 +5,17 @@
 
 #include <opencv2/core.hpp>
 
-#include "block.h"
+#include <block.h>
 
-class terminal
+class terminal: public block
 {
-    cv::Point tl;
-    cv::Point br;
-    std::string text;
-    block child;
+    const cv::Point _tl;
+    const cv::Point _br;
+    const std::string _text;
+
+public:
+    std::shared_ptr<block> child;
+    terminal(cv::Point tl, cv::Point br);
 };
 
 #endif // PROJECT_TERMINAL_H

@@ -5,4 +5,13 @@
 
 #include <opencv2/core.hpp>
 
-std::vector<std::pair<cv::Point, cv::Point>> get_lines(cv::Mat image);
+#include <block.h>
+#include <terminal.h>
+#include <flowline.h>
+
+using line = std::pair<cv::Point, cv::Point>;
+
+std::vector<line> get_lines(cv::Mat image);
+
+std::shared_ptr<terminal> make_terminal(const std::vector<line> &lines, size_t upper, size_t lower);
+std::shared_ptr<flowline> make_flowline(const std::vector<line> &lines, size_t index, cv::Point start, cv::Point end);

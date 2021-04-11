@@ -11,8 +11,9 @@ protected:
         terminal,
         flowline
     };
-    block_type type;
-    std::unique_ptr<block> parent;
+    const block_type _type;
+
+    block(block_type type): _type{type} {}
 };
 
 #endif // PROJECT_BLOCK_H
