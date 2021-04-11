@@ -4,6 +4,8 @@
 # build folder
 build
 .idea
+cmake-build-debug
+*.py
 
 # Compiled Object files
 *.slo
