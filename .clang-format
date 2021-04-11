@@ -12,10 +12,12 @@ IndentCaseLabels: false
 ColumnLimit: 100
 BreakConstructorInitializers: AfterColon
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
+AccessModifierOffset: -4
 BraceWrapping:
   BeforeLambdaBody: false
   AfterFunction: true
   AfterNamespace: true
   AfterStruct: true
   AfterUnion: true
+  AfterClass: true
 
