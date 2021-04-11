@@ -1,0 +1,12 @@
+[
+{
+  "directory": "C:/Users/user/Desktop/proj/diploma/build/src",
+  "command": "D:\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe  @CMakeFiles/project.dir/includes_CXX.rsp -g -std=c++2a -o CMakeFiles\\project.dir\\main.cpp.obj -c C:\\Users\\user\\Desktop\\proj\\diploma\\src\\main.cpp",
+  "file": "C:/Users/user/Desktop/proj/diploma/src/main.cpp"
+},
+{
+  "directory": "C:/Users/user/Desktop/proj/diploma/build/src",
+  "command": "D:\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe  @CMakeFiles/project.dir/includes_CXX.rsp -g -std=c++2a -o CMakeFiles\\project.dir\\flowline.cpp.obj -c C:\\Users\\user\\Desktop\\proj\\diploma\\src\\flowline.cpp",
+  "file": "C:/Users/user/Desktop/proj/diploma/src/flowline.cpp"
+}
+]
