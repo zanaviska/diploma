@@ -5,6 +5,11 @@
 
 #include <functions.h>
 
+std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
+{
+    
+}
+
 // offset between points, to be equal
 constexpr size_t threshold = 10;
 

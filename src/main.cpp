@@ -12,7 +12,7 @@
 int main(int argc, char **argv)
 {
     // Loads an image
-    cv::Mat src = cv::imread("../flowchart1.jpg", cv::IMREAD_GRAYSCALE);
+    cv::Mat src = cv::imread("../flowchart2.jpg", cv::IMREAD_GRAYSCALE);
     // Check if image is loaded fine
     if (src.empty()) {
         printf(" Error opening image\n");
