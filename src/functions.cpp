@@ -1,10 +1,11 @@
 #include <algorithm>
 #include <iostream>
 
-#include <opencv2/imgproc.hpp>
 #include <opencv2/dnn.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include <functions.h>
+#include <opencv2/highgui.hpp>
 
 std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 {
@@ -23,13 +24,13 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
     detector.setInputParams(detScale, detInputSize, detMean, swapRB);
 
     // Detection
-    std::vector< std::vector<Point> > detResults;
+    std::vector<std::vector<Point>> detResults;
     detector.detect(image, detResults);
 
     std::vector<std::pair<std::string, cv::Rect>> res;
     res.reserve(detResults.size());
 
-    for(auto &i: detResults)
+    for (auto &i : detResults)
     {
         res.push_back({"", boundingRect(i)});
     }
@@ -46,8 +47,17 @@ bool is_equal(cv::Point lhs, cv::Point rhs)
 
 bool on_line(line l, cv::Point p)
 {
-    return std::abs(l.first.y - p.y) < threshold && std::abs(l.second.y - p.y) < threshold &&
-           std::min(l.first.x, l.second.x) < p.x && p.x < std::max(l.second.x, l.first.x);
+    double a = std::hypot(l.first.x - l.second.x, l.first.y - l.second.y);
+    double b = std::hypot(l.first.x - p.x, l.first.y - p.y);
+    double c = std::hypot(l.second.x - p.x, l.second.y - p.y);
+    double per = (a + b + c) / 2;
+    double h;
+    if (b * b > a * a + c * c || c * c > a * a + b * b)
+        h = std::min(b, c);
+    else
+        h = 2 * sqrt(per * (per - a) * (per - b) * (per - c)) / a;
+    // std::cout << h << '\n';
+    return h < threshold;
 }
 
 std::vector<line> get_lines(cv::Mat src)
@@ -61,14 +71,15 @@ std::vector<line> get_lines(cv::Mat src)
 
     // Probabilistic Line Transform
     std::vector<cv::Vec4i> linesP;                        // will hold the results of the detection
-    HoughLinesP(dst, linesP, 1, CV_PI / 180, 50, 50, 10); // runs the actual detection
+    HoughLinesP(dst, linesP, 1, CV_PI / 180, 80, 30, 10); // runs the actual detection
 
     // store in res vector
     std::vector<line> res;
     res.reserve(linesP.size());
-    std::transform(linesP.begin(), linesP.end(), std::back_inserter(res), [](cv::Vec4i l) {
-        return std::pair{cv::Point(l[0], l[1]), cv::Point(l[2], l[3])};
-    });
+    std::transform(linesP.begin(), linesP.end(), std::back_inserter(res),
+                   [](cv::Vec4i l) {
+                       return std::pair{cv::Point(l[0], l[1]), cv::Point(l[2], l[3])};
+                   });
     return res;
 }
 
@@ -83,18 +94,20 @@ std::shared_ptr<terminal> make_terminal(const std::vector<line> &lines, size_t u
         up_line.first.x < up_line.second.x ? up_line.first : up_line.second,
         lo_line.second.x < lo_line.first.x ? lo_line.first : lo_line.second);
 
-//    std::cout << "our line:\n";
-//    std::cout << lo_line.first << ' ' << lo_line.second << "\n\n";
+    //    std::cout << "our line:\n";
+    //    std::cout << lo_line.first << ' ' << lo_line.second << "\n\n";
     // if our terminal isn't last that add child(flowline)
     if (lines.size() != lower + 1)
-        for(size_t i = 2; i < lines.size(); i++)
+        for (size_t i = 2; i < lines.size(); i++)
         {
-//            std::cout << lines[i].first << ' ' << lines[i].second << '\n';
-            if (on_line(lo_line, lines[i].first)) {
-                res->child = make_flowline(lines,i, lines[i].first, lines[i].second);
+            //            std::cout << lines[i].first << ' ' << lines[i].second << '\n';
+            if (on_line(lo_line, lines[i].first))
+            {
+                res->child = make_flowline(lines, i, lines[i].first, lines[i].second);
                 break;
             }
-            if (on_line(lo_line, lines[i].second)) {
+            if (on_line(lo_line, lines[i].second))
+            {
                 res->child = make_flowline(lines, i, lines[i].second, lines[i].first);
                 break;
             }
@@ -107,30 +120,31 @@ std::shared_ptr<flowline> make_flowline(const std::vector<line> &lines, size_t i
 {
     std::cout << "Added flowline\n";
 
-    //create flowline
+    // create flowline
     auto res = std::make_shared<flowline>(std::move(start), end);
 
-//    std::cout << "end: " << end << '\n';
-    //if next element is flowline
-    for(size_t i = 2; i < lines.size(); i++)
-        if(i != index)
+    //    std::cout << "end: " << end << '\n';
+    // if next element is flowline
+    for (size_t i = 2; i < lines.size(); i++)
+        if (i != index)
         {
-            if(is_equal(end, lines[i].first))
+            if (is_equal(end, lines[i].first))
             {
                 res->child = make_flowline(lines, i, lines[i].first, lines[i].second);
                 return res;
             }
-            if(is_equal(end, lines[i].second))
+            if (is_equal(end, lines[i].second))
             {
                 res->child = make_flowline(lines, i, lines[i].second, lines[i].first);
                 return res;
             }
         }
-    //if next element is terminal
-    for(size_t i = 2; i < lines.size(); i++)
+    // if next element is terminal
+    for (size_t i = 2; i < lines.size(); i++)
     {
-//        std::cout << lines[i].first << ' ' << lines[i].first << ' ' << lines[i].second << '\n';
-        if(on_line(lines[i], end))
+        //        std::cout << lines[i].first << ' ' << lines[i].first << ' ' << lines[i].second <<
+        //        '\n';
+        if (on_line(lines[i], end))
         {
             res->child = make_terminal(lines, i, lines.size() - 1);
             return res;
