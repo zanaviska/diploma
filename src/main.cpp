@@ -19,6 +19,17 @@ int main(int argc, char **argv)
         return -1;
     }
 
+
+    cv::Mat clone;
+    cv::cvtColor(src, clone, cv::COLOR_GRAY2BGR);
+
+    auto words = text_getter(clone);
+    for(auto word: words)
+    {
+        cv::rectangle(clone, word.second, cv::Scalar(0, 0, 255), cv::FILLED);
+        cv::rectangle(src, word.second, cv::Scalar(255, 255, 255), cv::FILLED);
+    }
+
     auto lines = get_lines(src);
     if (lines.size() < 3) return -1;
 
@@ -40,8 +51,6 @@ int main(int argc, char **argv)
     for (auto &i : lines)
     std::cout << i.first << ' ' << i.second << '\n';
 
-    cv::Mat clone;
-    cv::cvtColor(src, clone, cv::COLOR_GRAY2BGR);
     for (size_t i = 0; i < lines.size(); i++)
         switch (i) {
         case 0:
@@ -51,7 +60,6 @@ int main(int argc, char **argv)
         default:
             cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 0, 0), 2);
         }
-    cv::imshow("", clone);
 
     if (std::abs(lines[1].first.y - lines[1].second.y) >
         std::abs(lines[2].first.y - lines[2].second.y))
@@ -59,6 +67,8 @@ int main(int argc, char **argv)
 
     auto start = make_terminal(lines, 0, 1);
 
+    cv::imshow("", clone);
+    cv::imshow("1", src);
     cv::waitKey();
     return 0;
 }

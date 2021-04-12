@@ -2,12 +2,38 @@
 #include <iostream>
 
 #include <opencv2/imgproc.hpp>
+#include <opencv2/dnn.hpp>
 
 #include <functions.h>
 
 std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 {
-    
+    using namespace cv;
+    using namespace cv::dnn;
+    int width = 320;
+    int height = 320;
+    TextDetectionModel_EAST detector("../resources/frozen_east_text_detection.pb");
+    detector.setConfidenceThreshold(0.5).setNMSThreshold(0.4);
+
+    // Parameters for Detection
+    double detScale = 1.0;
+    Size detInputSize = Size(width, height);
+    Scalar detMean = Scalar(123.68, 116.78, 103.94);
+    bool swapRB = true;
+    detector.setInputParams(detScale, detInputSize, detMean, swapRB);
+
+    // Detection
+    std::vector< std::vector<Point> > detResults;
+    detector.detect(image, detResults);
+
+    std::vector<std::pair<std::string, cv::Rect>> res;
+    res.reserve(detResults.size());
+
+    for(auto &i: detResults)
+    {
+        res.push_back({"", boundingRect(i)});
+    }
+    return res;
 }
 
 // offset between points, to be equal
