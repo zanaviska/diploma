@@ -3,12 +3,86 @@
 #include <set>
 
 #include <opencv2/core.hpp>
+#include <opencv2/dnn.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
 #include <functions.h>
 #include <terminal.h>
+
+// Remove the bounding boxes with low confidence using non-maxima suppression
+void postprocess(cv::Mat &frame, const std::vector<cv::Mat> &outs)
+{
+    float confThreshold = 0.5; // Confidence threshold
+    float nmsThreshold = 0.4;  // Non-maximum suppression threshold
+    std::vector<int> classIds;
+    std::vector<float> confidences;
+    std::vector<cv::Rect> boxes;
+
+    for (size_t i = 0; i < outs.size(); ++i)
+    {
+        // Scan through all the bounding boxes output from the network and keep only the
+        // ones with high confidence scores. Assign the box's class label as the class
+        // with the highest score for the box.
+        float *data = (float *)outs[i].data;
+        for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols)
+        {
+            cv::Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
+            cv::Point classIdPoint;
+            double confidence;
+            // Get the value and location of the maximum score
+            minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
+//            if (confidence > confThreshold)
+            {
+                int centerX = (int)(data[0] * frame.cols);
+                int centerY = (int)(data[1] * frame.rows);
+                int width = (int)(data[2] * frame.cols);
+                int height = (int)(data[3] * frame.rows);
+                int left = centerX - width / 2;
+                int top = centerY - height / 2;
+
+                classIds.push_back(classIdPoint.x);
+                confidences.push_back((float)confidence);
+                boxes.push_back(cv::Rect(left, top, width, height));
+            }
+        }
+    }
+
+    // Perform non maximum suppression to eliminate redundant overlapping boxes with
+    // lower confidences
+    std::vector<int> indices;
+    cv::dnn::NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
+    std::cout << indices.size();
+    for (size_t i = 0; i < indices.size(); ++i)
+    {
+        int idx = indices[i];
+        cv::Rect box = boxes[idx];
+        cv::rectangle(frame, box, cv::Scalar(255, 0, 0), 2);
+//        drawPred(classIds[idx], confidences[idx], box.x, box.y, box.x + box.width,
+//                 box.y + box.height, frame);
+    }
+}
+
+// Get the names of the output layers
+std::vector<std::string> getOutputsNames(const cv::dnn::Net &net)
+{
+    static std::vector<std::string> names;
+    if (names.empty())
+    {
+        // Get the indices of the output layers, i.e. the layers with unconnected outputs
+        std::vector<int> outLayers = net.getUnconnectedOutLayers();
+
+        // get the names of all the layers in the network
+        std::vector<std::string> layersNames = net.getLayerNames();
+
+        // Get the names of the output layers in names
+        names.resize(outLayers.size());
+        for (size_t i = 0; i < outLayers.size(); ++i)
+            names[i] = layersNames[outLayers[i] - 1];
+    }
+    return names;
+}
 
 int main(int argc, char **argv)
 {
@@ -23,8 +97,8 @@ int main(int argc, char **argv)
 
     cv::Mat clone;
     cv::cvtColor(src, clone, cv::COLOR_GRAY2BGR);
-
-// Initialize the parameters
+/*
+    // Initialize the parameters
     float confThreshold = 0.5; // Confidence threshold
     float nmsThreshold = 0.4;  // Non-maximum suppression threshold
     int inpWidth = 416;        // Width of network's input image
@@ -32,159 +106,47 @@ int main(int argc, char **argv)
 
     // Load names of classes
     std::string classesFile = "coco.names";
-//    std::ifstream ifs(classesFile.c_str());
-//    std::string line;
-//    while (getline(ifs, line)) classes.push_back(line);
+    //    std::ifstream ifs(classesFile.c_str());
+    //    std::string line;
+    //    while (getline(ifs, line)) classes.push_back(line);
 
-// Give the configuration and weight files for the model
+    // Give the configuration and weight files for the model
     std::string modelConfiguration = "../resources/blocks.cfg";
-    std::string modelWeights = ".yolov3.weights";
+    std::string modelWeights = "../resources/blocks.weights";
 
-// Load the network
-    Net net = readNetFromDarknet(modelConfiguration, modelWeights);
-    net.setPreferableBackend(DNN_BACKEND_OPENCV);
-    net.setPreferableTarget(DNN_TARGET_CPU);
+    // Load the network
+    cv::dnn::Net net = cv::dnn::readNetFromDarknet(modelConfiguration, modelWeights);
+    net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+    net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 
-    outputFile = "yolo_out_cpp.avi";
-    if (parser.has("image"))
-    {
-        // Open the image file
-        str = parser.get<String>("image");
-        ifstream ifile(str);
-        if (!ifile) throw("error");
-        cap.open(str);
-        str.replace(str.end()-4, str.end(), "_yolo_out_cpp.jpg");
-        outputFile = str;
-    }
-    else if (parser.has("video"))
-    {
-        // Open the video file
-        str = parser.get<String>("video");
-        ifstream ifile(str);
-        if (!ifile) throw("error");
-        cap.open(str);
-        str.replace(str.end()-4, str.end(), "_yolo_out_cpp.avi");
-        outputFile = str;
-    }
-        // Open the webcaom
-    else cap.open(parser.get<int>("device"));
+    // Create a 4D blob from a frame.
+    cv::Mat blob;
+    cv::dnn::blobFromImage(clone, blob, 1 / 255.0, cv::Size(inpWidth, inpHeight),
+                           cv::Scalar(0, 0, 0), true, false);
 
-    // Get the video writer initialized to save the output video
-    if (!parser.has("image")) {
-        video.open(outputFile, VideoWriter::fourcc('M','J','P','G'), 28, Size(cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT)));
-    }
+    // Sets the input to the network
+    net.setInput(blob);
 
-    // Process frames.
-    while (waitKey(1) < 0)
-    {
-        // get frame from the video
-        cap >> frame;
+    // Runs the forward pass to get output of the output layers
+    std::vector<cv::Mat> outs;
+    net.forward(outs, getOutputsNames(net));
 
-        // Stop the program if reached end of video
-        if (frame.empty()) {
-            cout << "Done processing !!!" << endl;
-            cout << "Output file is stored as " << outputFile << endl;
-            waitKey(3000);
-            break;
-        }
-        // Create a 4D blob from a frame.
-        blobFromImage(frame, blob, 1/255.0, cv::Size(inpWidth, inpHeight), Scalar(0,0,0), true, false);
+    // Remove the bounding boxes with low confidence
+    postprocess(clone, outs);
 
-        //Sets the input to the network
-        net.setInput(blob);
+    std::cout << "so it works?";
+    // Put efficiency information. The function getPerfProfile returns the overall time for
+    // inference(t) and the timings for each of the layers(in layersTimes)
+    std::vector<double> layersTimes;
 
-        // Runs the forward pass to get output of the output layers
-        vector<Mat> outs;
-        net.forward(outs, getOutputsNames(net));
+    // Write the frame with the detection boxes
+    cv::Mat detectedFrame;
+//    clone.convertTo(detectedFrame, CV_8U);
 
-        // Remove the bounding boxes with low confidence
-        postprocess(frame, outs);
+    imshow("kWinName", clone);
+    cv::waitKey(0);
 
-        // Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
-        vector<double> layersTimes;
-        double freq = getTickFrequency() / 1000;
-        double t = net.getPerfProfile(layersTimes) / freq;
-        string label = format("Inference time for a frame : %.2f ms", t);
-        putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));
-
-        // Write the frame with the detection boxes
-        Mat detectedFrame;
-        frame.convertTo(detectedFrame, CV_8U);
-        if (parser.has("image")) imwrite(outputFile, detectedFrame);
-        else video.write(detectedFrame);
-
-        imshow(kWinName, frame);
-    }
-
-    // Get the names of the output layers
-    vector<String> getOutputsNames(const Net& net)
-    {
-        static vector<String> names;
-        if (names.empty())
-        {
-            //Get the indices of the output layers, i.e. the layers with unconnected outputs
-            vector<int> outLayers = net.getUnconnectedOutLayers();
-
-            //get the names of all the layers in the network
-            vector<String> layersNames = net.getLayerNames();
-
-            // Get the names of the output layers in names
-            names.resize(outLayers.size());
-            for (size_t i = 0; i < outLayers.size(); ++i)
-                names[i] = layersNames[outLayers[i] - 1];
-        }
-        return names;
-    }
-
-    // Remove the bounding boxes with low confidence using non-maxima suppression
-    void postprocess(Mat& frame, const vector<Mat>& outs)
-    {
-        vector<int> classIds;
-        vector<float> confidences;
-        vector<Rect> boxes;
-
-        for (size_t i = 0; i < outs.size(); ++i)
-        {
-            // Scan through all the bounding boxes output from the network and keep only the
-            // ones with high confidence scores. Assign the box's class label as the class
-            // with the highest score for the box.
-            float* data = (float*)outs[i].data;
-            for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols)
-            {
-                Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
-                Point classIdPoint;
-                double confidence;
-                // Get the value and location of the maximum score
-                minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
-                if (confidence > confThreshold)
-                {
-                    int centerX = (int)(data[0] * frame.cols);
-                    int centerY = (int)(data[1] * frame.rows);
-                    int width = (int)(data[2] * frame.cols);
-                    int height = (int)(data[3] * frame.rows);
-                    int left = centerX - width / 2;
-                    int top = centerY - height / 2;
-
-                    classIds.push_back(classIdPoint.x);
-                    confidences.push_back((float)confidence);
-                    boxes.push_back(Rect(left, top, width, height));
-                }
-            }
-        }
-
-        // Perform non maximum suppression to eliminate redundant overlapping boxes with
-        // lower confidences
-        vector<int> indices;
-        NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
-        for (size_t i = 0; i < indices.size(); ++i)
-        {
-            int idx = indices[i];
-            Rect box = boxes[idx];
-            drawPred(classIds[idx], confidences[idx], box.x, box.y,
-                     box.x + box.width, box.y + box.height, frame);
-        }
-    }
-    return 0;
+    return 0;*/
     auto words = text_getter(clone);
     for (auto word : words)
     {
