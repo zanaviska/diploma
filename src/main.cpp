@@ -249,59 +249,6 @@ int main(int argc, char **argv)
                   return std::min(lhs.first.x, lhs.second.x) < std::min(lhs.first.x, lhs.second.x);
               });
 
-    //    auto it = std::unique(lines.begin(), lines.end(), [](line lhs, line rhs) {
-    //        return (is_equal(lhs.first, rhs.first) && is_equal(lhs.second, rhs.second)) ||
-    //               (is_equal(lhs.first, rhs.second) && is_equal(lhs.second, rhs.first));
-    //    });
-    //    lines.erase(it, lines.end());
-    //    [59, 49] [163, 49]
-    //    [50, 89] [172, 89]
-    //    [109, 209] [109, 89]
-    //    [53, 92] [169, 92]
-    //    [113, 209] [238, 209]
-    //    [239, 299] [239, 210]
-    //    [111, 212] [242, 212]
-    //    [113, 402] [113, 299]
-    //    [111, 300] [242, 300]
-    //    [108, 402] [109, 338]
-    //    [58, 399] [164, 399]
-    //    [50, 439] [172, 439]
-
-    std::cout << "lines\n";
-    for (auto &i : lines)
-        std::cout << i.first << ' ' << i.second << '\n';
-
-    for (size_t i = 0; i < lines.size(); i++)
-        switch (i)
-        {
-        case 0:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 255, 0), 2);
-            break;
-        case 1:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 0, 255), 2);
-            break;
-        case 2:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 0, 255), 2);
-            break;
-        case 3:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 255, 255), 2);
-            break;
-        case 4:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 0), 2);
-            break;
-        case 5:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 0, 0), 2);
-            break;
-        case 6:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 150, 150), 2);
-            break;
-        case 7:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(150, 255, 150), 2);
-            break;
-        default:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(100, 100, 100), 2);
-        }
-
     if (std::abs(lines[1].first.y - lines[1].second.y) >
         std::abs(lines[2].first.y - lines[2].second.y))
         std::swap(lines[1], lines[2]);
