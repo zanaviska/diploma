@@ -115,6 +115,12 @@ std::shared_ptr<terminal> make_terminal(const std::vector<line> &lines, size_t u
     return res;
 }
 
+std::shared_ptr<input> make_input(const std::vector<line> &lines, int upper, int left, int right)
+{
+    std::cout << "input\n";
+    return nullptr;
+}
+
 std::shared_ptr<flowline> make_flowline(const std::vector<line> &lines, size_t index,
                                         cv::Point start, cv::Point end)
 {
@@ -123,7 +129,6 @@ std::shared_ptr<flowline> make_flowline(const std::vector<line> &lines, size_t i
     // create flowline
     auto res = std::make_shared<flowline>(std::move(start), end);
 
-    //    std::cout << "end: " << end << '\n';
     // if next element is flowline
     for (size_t i = 2; i < lines.size(); i++)
         if (i != index)
@@ -139,11 +144,54 @@ std::shared_ptr<flowline> make_flowline(const std::vector<line> &lines, size_t i
                 return res;
             }
         }
+    // if next element is input block
+    for (int i = 2; i < lines.size(); i++)
+        if (on_line(lines[i], end))
+        {
+            int l = -1, r = -1;
+            for (int j = 2; j < lines.size(); j++)
+                if (i != j)
+                {
+                    if (is_equal(lines[i].first, lines[j].first) ||
+                        is_equal(lines[i].first, lines[j].second) ||
+                        is_equal(lines[i].second, lines[j].first) ||
+                        is_equal(lines[i].second, lines[j].second))
+                    {
+                        l = j;
+                        std::swap(l, r);
+                    }
+                }
+            line left = lines[l];
+            line right = lines[r];
+            //if paralelllogram
+            if (is_equal(cv::Point(std::max(left.first.x, left.second.x) -
+                                       std::min(left.first.x, left.second.x),
+                                   std::max(left.first.y, left.second.y) -
+                                       std::min(left.first.y, left.second.y)),
+                         cv::Point(std::max(right.first.x, right.second.x) -
+                                       std::min(right.first.x, right.second.x),
+                                   std::max(right.first.y, left.second.y) -
+                                       std::min(right.first.y, right.second.y))))
+            {
+                //if square
+                if(is_equal(left.first, cv::Point(left.second.x, left.first.y)))
+                {
+                    // process
+                    std::cout << "proccess\n";
+                    return res;
+                } else
+                {
+                    // input
+                    res->child = make_input(lines, i, l, r);
+                    return res;
+                }
+
+            }
+        }
+
     // if next element is terminal
     for (size_t i = 2; i < lines.size(); i++)
     {
-        //        std::cout << lines[i].first << ' ' << lines[i].first << ' ' << lines[i].second <<
-        //        '\n';
         if (on_line(lines[i], end))
         {
             res->child = make_terminal(lines, i, lines.size() - 1);

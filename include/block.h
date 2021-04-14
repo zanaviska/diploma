@@ -9,7 +9,8 @@ protected:
     enum block_type
     {
         terminal,
-        flowline
+        flowline,
+        input
     };
     const block_type _type;
 
