@@ -161,6 +161,7 @@ std::shared_ptr<flowline> make_flowline(const std::vector<line> &lines, size_t i
                         std::swap(l, r);
                     }
                 }
+            if(l == -1) break;
             line left = lines[l];
             line right = lines[r];
             //if paralelllogram
