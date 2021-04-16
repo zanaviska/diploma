@@ -33,7 +33,7 @@ void postprocess(cv::Mat &frame, const std::vector<cv::Mat> &outs)
             double confidence;
             // Get the value and location of the maximum score
             minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
-//            if (confidence > confThreshold)
+            //            if (confidence > confThreshold)
             {
                 int centerX = (int)(data[0] * frame.cols);
                 int centerY = (int)(data[1] * frame.rows);
@@ -58,9 +58,11 @@ void postprocess(cv::Mat &frame, const std::vector<cv::Mat> &outs)
     {
         int idx = indices[i];
         cv::Rect box = boxes[idx];
-        cv::rectangle(frame, box, cv::Scalar(255, 0, 0), 2);
-//        drawPred(classIds[idx], confidences[idx], box.x, box.y, box.x + box.width,
-//                 box.y + box.height, frame);
+        cv::rectangle(frame, box,
+                      cv::Scalar(255, 255 * (classIds[idx] == 2), 255 * (classIds[idx] == 1)), 2);
+        std::cout << '\n' << classIds[idx] << '\n';
+        //        drawPred(classIds[idx], confidences[idx], box.x, box.y, box.x + box.width,
+        //                 box.y + box.height, frame);
     }
 }
 
@@ -97,9 +99,9 @@ int main(int argc, char **argv)
 
     cv::Mat clone;
     cv::cvtColor(src, clone, cv::COLOR_GRAY2BGR);
-/*
+
     // Initialize the parameters
-    float confThreshold = 0.5; // Confidence threshold
+    /*float confThreshold = 0.5; // Confidence threshold
     float nmsThreshold = 0.4;  // Non-maximum suppression threshold
     int inpWidth = 416;        // Width of network's input image
     int inpHeight = 416;       // Height of network's input image
@@ -141,7 +143,7 @@ int main(int argc, char **argv)
 
     // Write the frame with the detection boxes
     cv::Mat detectedFrame;
-//    clone.convertTo(detectedFrame, CV_8U);
+    //    clone.convertTo(detectedFrame, CV_8U);
 
     imshow("kWinName", clone);
     cv::waitKey(0);
@@ -249,11 +251,57 @@ int main(int argc, char **argv)
                   return std::min(lhs.first.x, lhs.second.x) < std::min(lhs.first.x, lhs.second.x);
               });
 
-    if (std::abs(lines[1].first.y - lines[1].second.y) >
-        std::abs(lines[2].first.y - lines[2].second.y))
-        std::swap(lines[1], lines[2]);
+    // place horizontal line of first terminal on first two lines
+    for(int i = 0; i < lines.size(); i++)
+        if(is_equal(lines[i].first, {lines[i].first.x, lines[i].second.y}))
+        {
+            std::swap(lines[i], lines[0]);
 
-    auto start = make_terminal(lines, 0, 1);
+            for(int j = i+1; j < lines.size(); j++)
+                if(is_equal(lines[j].first, {lines[j].first.x, lines[j].second.y}))
+                {
+                    std::swap(lines[j], lines[1]);
+                    break;
+                }
+            break;
+        }
+
+    std::cout << "lines\n";
+    for (auto &i : lines)
+        std::cout << i.first << ' ' << i.second << '\n';
+
+    for (size_t i = 0; i < lines.size(); i++)
+        switch (i)
+        {
+        case 0:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 255, 0), 2);
+            break;
+        case 1:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 0, 255), 2);
+            break;
+        case 2:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 0, 255), 2);
+            break;
+        case 3:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 255, 255), 2);
+            break;
+        case 4:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 0), 2);
+            break;
+        case 5:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 0, 0), 2);
+            break;
+        case 6:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 150, 150), 2);
+            break;
+        case 7:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(150, 255, 150), 2);
+            break;
+        default:
+            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(150, 150, 150), 3);
+        }
+
+    auto start = std::make_shared<terminal>(lines, 0, 1);
 
     cv::imshow("", clone);
     cv::imshow("1", src);

@@ -10,7 +10,8 @@ protected:
     {
         terminal,
         flowline,
-        input
+        input,
+        proccess
     };
     const block_type _type;
 

@@ -1,10 +1,39 @@
-//
-// Created by user on 22.05.2021.
-//
-
 #include "terminal.h"
+
+#include <iostream>
+#include <flowline.h>
+
+terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower): block(block_type::terminal)
+{
+    std::cout << "\nAdded terminal1\n";
+    const line &up_line = lines[upper];
+    const line &lo_line = lines[lower];
+
+    _tl = up_line.first.x < up_line.second.x ? up_line.first : up_line.second;
+    _br = lo_line.second.x < lo_line.first.x ? lo_line.first : lo_line.second;
+
+    // if our terminal isn't last that add child(flowline)
+    if (lines.size() != lower + 1)
+        for (size_t i = 2; i < lines.size(); i++)
+        {
+            //            std::cout << lines[i].first << ' ' << lines[i].second << '\n';
+            if (on_line(lo_line, lines[i].first) && !is_equal(lo_line.first, lines[i].first) &&
+                !is_equal(lo_line.second, lines[i].first))
+            {
+                child = std::make_shared<flowline>(lines, i, lines[i].first, lines[i].second);
+                break;
+            }
+            if (on_line(lo_line, lines[i].second) && !is_equal(lo_line.first, lines[i].second) &&
+                !is_equal(lo_line.second, lines[i].second))
+            {
+                child = std::make_shared<flowline>(lines, i, lines[i].second, lines[i].first);
+                break;
+            }
+        }
+}
 
 terminal::terminal(cv::Point tl, cv::Point br) :
     block(block_type::terminal), _tl{std::move(tl)}, _br{std::move(br)}, _text{""}
 {
+
 }
