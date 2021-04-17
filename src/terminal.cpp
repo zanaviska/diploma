@@ -1,9 +1,10 @@
 #include "terminal.h"
 
-#include <iostream>
 #include <flowline.h>
+#include <iostream>
 
-terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower): block(block_type::terminal)
+terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower) :
+    block(block_type::terminal)
 {
     std::cout << "\nAdded terminal1\n";
     const line &up_line = lines[upper];
@@ -20,13 +21,13 @@ terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower): 
             if (on_line(lo_line, lines[i].first) && !is_equal(lo_line.first, lines[i].first) &&
                 !is_equal(lo_line.second, lines[i].first))
             {
-                child = std::make_shared<flowline>(lines, i, lines[i].first, lines[i].second);
+                child = std::make_shared<::flowline>(lines, i, lines[i].first, lines[i].second);
                 break;
             }
             if (on_line(lo_line, lines[i].second) && !is_equal(lo_line.first, lines[i].second) &&
                 !is_equal(lo_line.second, lines[i].second))
             {
-                child = std::make_shared<flowline>(lines, i, lines[i].second, lines[i].first);
+                child = std::make_shared<::flowline>(lines, i, lines[i].second, lines[i].first);
                 break;
             }
         }
@@ -35,5 +36,4 @@ terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower): 
 terminal::terminal(cv::Point tl, cv::Point br) :
     block(block_type::terminal), _tl{std::move(tl)}, _br{std::move(br)}, _text{""}
 {
-
 }

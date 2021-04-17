@@ -2,12 +2,12 @@
 #include <iostream>
 
 #include <opencv2/dnn.hpp>
-#include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include <functions.h>
-#include <terminal.h>
 #include <input.h>
+#include <terminal.h>
 
 std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 {
@@ -83,9 +83,4 @@ std::vector<line> get_lines(cv::Mat src)
                        return std::pair{cv::Point(l[0], l[1]), cv::Point(l[2], l[3])};
                    });
     return res;
-}
-
-std::shared_ptr<proccess> make_process(const std::vector<line> &lines, int upper, int left, int right)
-{
-    std::cout << "make proccess\n";
 }

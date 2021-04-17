@@ -9,7 +9,5 @@ class proccess : public block
 {
 public:
     std::shared_ptr<::flowline> child{nullptr};
-    proccess();
+    proccess(const std::vector<line> &lines, int upper, int left, int right);
 };
-
-proccess::proccess() : block(block_type::proccess) {}

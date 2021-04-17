@@ -4,10 +4,11 @@
 #include <memory>
 
 #include <input.h>
-#include <terminal.h>
 #include <proccess.h>
+#include <terminal.h>
 
-flowline::flowline(const std::vector<line> &lines, size_t index, cv::Point start, cv::Point end):
+flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point &start,
+                   const cv::Point &end) :
     block(block_type::flowline)
 {
     std::cout << "Added flowline\n";
@@ -62,25 +63,25 @@ flowline::flowline(const std::vector<line> &lines, size_t index, cv::Point start
             line right = lines[r];
             // if paralelllogram
             if (is_equal(cv::Point(std::max(left.first.x, left.second.x) -
-                                   std::min(left.first.x, left.second.x),
+                                       std::min(left.first.x, left.second.x),
                                    std::max(left.first.y, left.second.y) -
-                                   std::min(left.first.y, left.second.y)),
+                                       std::min(left.first.y, left.second.y)),
                          cv::Point(std::max(right.first.x, right.second.x) -
-                                   std::min(right.first.x, right.second.x),
+                                       std::min(right.first.x, right.second.x),
                                    std::max(right.first.y, left.second.y) -
-                                   std::min(right.first.y, right.second.y))))
+                                       std::min(right.first.y, right.second.y))))
             {
                 // if square
                 if (is_equal(left.first, cv::Point(left.second.x, left.first.y)))
                 {
                     // process
-                    child = std::make_shared<proccess>(lines, i, l, r);
+                    child = std::make_shared<::proccess>(lines, i, l, r);
                     return;
                 }
                 else
                 {
                     // input
-                    child = std::make_shared<input>(lines, i, l, r);
+                    child = std::make_shared<::input>(lines, i, l, r);
                     return;
                 }
             }
@@ -91,7 +92,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, cv::Point start
     {
         if (on_line(lines[i], end))
         {
-            child = std::make_shared<terminal>(lines, i, lines.size() - 1);
+            child = std::make_shared<::terminal>(lines, i, lines.size() - 1);
             return;
         }
     }
