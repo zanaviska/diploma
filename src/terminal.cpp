@@ -17,7 +17,6 @@ terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower) :
     if (lines.size() != lower + 1)
         for (size_t i = 2; i < lines.size(); i++)
         {
-            //            std::cout << lines[i].first << ' ' << lines[i].second << '\n';
             if (on_line(lo_line, lines[i].first) && !is_equal(lo_line.first, lines[i].first) &&
                 !is_equal(lo_line.second, lines[i].first))
             {
