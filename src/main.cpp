@@ -100,55 +100,7 @@ int main(int argc, char **argv)
     cv::Mat clone;
     cv::cvtColor(src, clone, cv::COLOR_GRAY2BGR);
 
-    // Initialize the parameters
-    /*float confThreshold = 0.5; // Confidence threshold
-    float nmsThreshold = 0.4;  // Non-maximum suppression threshold
-    int inpWidth = 416;        // Width of network's input image
-    int inpHeight = 416;       // Height of network's input image
-
-    // Load names of classes
-    std::string classesFile = "coco.names";
-    //    std::ifstream ifs(classesFile.c_str());
-    //    std::string line;
-    //    while (getline(ifs, line)) classes.push_back(line);
-
-    // Give the configuration and weight files for the model
-    std::string modelConfiguration = "../resources/blocks.cfg";
-    std::string modelWeights = "../resources/blocks.weights";
-
-    // Load the network
-    cv::dnn::Net net = cv::dnn::readNetFromDarknet(modelConfiguration, modelWeights);
-    net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-    net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-
-    // Create a 4D blob from a frame.
-    cv::Mat blob;
-    cv::dnn::blobFromImage(clone, blob, 1 / 255.0, cv::Size(inpWidth, inpHeight),
-                           cv::Scalar(0, 0, 0), true, false);
-
-    // Sets the input to the network
-    net.setInput(blob);
-
-    // Runs the forward pass to get output of the output layers
-    std::vector<cv::Mat> outs;
-    net.forward(outs, getOutputsNames(net));
-
-    // Remove the bounding boxes with low confidence
-    postprocess(clone, outs);
-
-    std::cout << "so it works?";
-    // Put efficiency information. The function getPerfProfile returns the overall time for
-    // inference(t) and the timings for each of the layers(in layersTimes)
-    std::vector<double> layersTimes;
-
-    // Write the frame with the detection boxes
-    cv::Mat detectedFrame;
-    //    clone.convertTo(detectedFrame, CV_8U);
-
-    imshow("kWinName", clone);
-    cv::waitKey(0);
-
-    return 0;*/
+    // fill waord with white color
     auto words = text_getter(clone);
     for (auto word : words)
     {
@@ -252,13 +204,13 @@ int main(int argc, char **argv)
               });
 
     // place horizontal line of first terminal on first two lines
-    for(int i = 0; i < lines.size(); i++)
-        if(is_equal(lines[i].first, {lines[i].first.x, lines[i].second.y}))
+    for (int i = 0; i < lines.size(); i++)
+        if (is_equal(lines[i].first, {lines[i].first.x, lines[i].second.y}))
         {
             std::swap(lines[i], lines[0]);
 
-            for(int j = i+1; j < lines.size(); j++)
-                if(is_equal(lines[j].first, {lines[j].first.x, lines[j].second.y}))
+            for (int j = i + 1; j < lines.size(); j++)
+                if (is_equal(lines[j].first, {lines[j].first.x, lines[j].second.y}))
                 {
                     std::swap(lines[j], lines[1]);
                     break;
