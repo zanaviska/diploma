@@ -80,8 +80,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, cv::Point start
                 else
                 {
                     // input
-                    class input temp(lines, i, l, r);
-                    child = std::make_shared<input>(temp);
+                    child = std::make_shared<input>(lines, i, l, r);
                     return;
                 }
             }

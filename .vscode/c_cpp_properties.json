@@ -5,10 +5,10 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:\\opencv\\build\\install\\include",
-                "${workspaceFolder}/include"
+                "${workspaceFolder}/include/"
             ],
             "defines": [],
-            "compilerPath": "D:/mingw64/bin/g++.exe",
+            "compilerPath": "C:/mingw64/bin/g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++20",
             "intelliSenseMode": "windows-gcc-x64",
