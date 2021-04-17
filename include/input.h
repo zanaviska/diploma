@@ -2,6 +2,7 @@
 #define PROJECT_INPUT_H
 
 #include <block.h>
+#include <flowline.h>
 #include <functions.h>
 
 class input : public block

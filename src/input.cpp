@@ -1,9 +1,38 @@
-#include "input.h"
+#include <input.h>
 
 #include <iostream>
 
 input::input(const std::vector<line> &lines, int upper, int left, int right) :
     block(block_type::input)
 {
-    std::cout << "input\n";
+    std::cout << "Added input\n";
+
+    line l = lines[left];
+    const line &u = lines[upper];
+    // sort element in  l to know exact order of elements in it
+    if (l.first.y > l.second.y) std::swap(l.first, l.second);
+
+    int dx = l.second.x - l.first.x;
+    int dy = l.second.y - l.first.y;
+    // get bottom line of input block
+    line bottom = {cv::Point(u.first.x + dx, u.first.y + dy),
+                   cv::Point(u.second.x + dx, u.second.y + dy)};
+
+    for (size_t i = 0; i < lines.size(); i++)
+        if (i != left && i != right)
+        {
+            if (on_line(bottom, lines[i].first) && !is_equal(lines[i].first, bottom.first) &&
+                !is_equal(lines[i].first, bottom.second))
+            {
+                child = std::make_shared<::flowline>(lines, i, lines[i].first, lines[i].second);
+                return;
+            }
+
+            if (on_line(bottom, lines[i].second) && !is_equal(lines[i].second, bottom.first) &&
+                !is_equal(lines[i].second, bottom.second))
+            {
+                child = std::make_shared<::flowline>(lines, i, lines[i].second, lines[i].first);
+                return;
+            }
+        }
 }
