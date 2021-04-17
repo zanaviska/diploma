@@ -8,8 +8,6 @@ class input : public block
 {
 public:
     std::shared_ptr<block> child{nullptr};
-    input() : block(block_type::input){};
-    input(const input& x);
     input(const std::vector<line> &lines, int upper, int left, int right);
 };
 
