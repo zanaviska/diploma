@@ -1,3 +1,8 @@
 #include <decision.h>
 
-decision::decision(const std::vector<line> lines) : block(block_type::decision) {}
+#include <iostream>
+
+decision::decision(const std::vector<line> lines) : block(block_type::decision)
+{
+    std::cout << "Added decision making\n";
+}
