@@ -51,13 +51,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
                 }
 
             // if there is less than 2 neighbor lines
-            if (l == -1)
-            {
-                std::cout << start << ' ' << _end << '\n';
-                std::cout << lines[i].first << ' ' << lines[i].second << '\n';
-                std::cout << l << ' ' << r << '\n';
-                break;
-            }
+            if (l == -1) break;
 
             line left = lines[l];
             line right = lines[r];
