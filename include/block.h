@@ -11,11 +11,12 @@ protected:
         terminal,
         flowline,
         input,
-        proccess
+        proccess,
+        decision
     };
     const block_type _type;
 
-    explicit block(block_type type): _type{type} {}
+    explicit block(block_type type) : _type{type} {}
 };
 
 #endif // PROJECT_BLOCK_H
