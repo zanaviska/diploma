@@ -18,9 +18,11 @@ input::input(const std::vector<line> &lines, int upper, int left, int right) :
     line bottom = {cv::Point(u.first.x + dx, u.first.y + dy),
                    cv::Point(u.second.x + dx, u.second.y + dy)};
 
+    // find line which should be corresponding line
     for (size_t i = 0; i < lines.size(); i++)
         if (i != left && i != right)
         {
+            // if one of line edge is on bottom line, but not in its edge
             if (on_line(bottom, lines[i].first) && !is_equal(lines[i].first, bottom.first) &&
                 !is_equal(lines[i].first, bottom.second))
             {
