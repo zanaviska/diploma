@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 
+#include <decision.h>
 #include <input.h>
 #include <proccess.h>
 #include <terminal.h>
@@ -16,22 +17,46 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
     _start = std::move(start);
     _end = std::move(end);
 
+    // potential neighbors
+    int neight1 = -1;
+    int neight2 = -1;
+
     // if next element is flowline
     for (size_t i = 2; i < lines.size(); i++)
         if (i != index)
         {
             if (is_equal(_end, lines[i].first))
             {
-                child = std::make_shared<flowline>(lines, i, lines[i].first, lines[i].second);
-                return;
+                neight1 = i;
+                std::swap(neight1, neight2);
             }
             if (is_equal(_end, lines[i].second))
             {
-                child = std::make_shared<flowline>(lines, i, lines[i].second, lines[i].first);
-                return;
+                neight1 = i;
+                std::swap(neight1, neight2);
             }
         }
-    // if next element is input block
+
+    // if we founded 2 lines -- we found decision block
+    if(neight1 != -1 && neight2 != -1)
+    {
+        child = std::make_shared<::decision>(lines);
+        return;
+    }
+
+    // if we found 1 line -- we found flowline
+    if (neight2 != -1)
+    {
+        if (is_equal(_end, lines[neight2].first))
+            child = std::make_shared<flowline>(lines, neight2, lines[neight2].first,
+                                               lines[neight2].second);
+        else
+            child = std::make_shared<flowline>(lines, neight2, lines[neight2].first,
+                                               lines[neight2].second);
+        return;
+    }
+
+    // if next element is starting with single line
     for (int i = 2; i < lines.size(); i++)
         if (on_line(lines[i], _end) && !is_equal(lines[i].first, _end) &&
             !is_equal(lines[i].second, _end))
