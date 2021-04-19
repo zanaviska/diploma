@@ -14,7 +14,7 @@
 int main(int argc, char **argv)
 {
     // Loads an image
-    cv::Mat src = cv::imread("../flowchart1.jpg", cv::IMREAD_GRAYSCALE);
+    cv::Mat src = cv::imread("../../flowchart3.jpg", cv::IMREAD_GRAYSCALE);
     // Check if image is loaded fine
     if (src.empty())
     {
@@ -32,8 +32,8 @@ int main(int argc, char **argv)
         cv::rectangle(clone, word.second, cv::Scalar(0, 0, 255), cv::FILLED);
         cv::rectangle(src, word.second, cv::Scalar(255, 255, 255), cv::FILLED);
     }
-
     auto lines = get_lines(src);
+    return 0;
 
     // clear duplicates
     for (size_t i = 0; i < lines.size(); i++)

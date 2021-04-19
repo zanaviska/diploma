@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\opencv\\build\\install\\include",
+                // "C:\\opencv\\build\\install\\include",
+                "C:\\openCV\\vs_cuda_build\\install\\include",
                 "${workspaceFolder}/include/"
             ],
             "defines": [],

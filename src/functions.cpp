@@ -4,6 +4,7 @@
 #include <opencv2/dnn.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/ximgproc.hpp>
 
 #include <functions.h>
 #include <input.h>
@@ -15,7 +16,7 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
     using namespace cv::dnn;
     int width = 320;
     int height = 320;
-    TextDetectionModel_EAST detector("../resources/frozen_east_text_detection.pb");
+    TextDetectionModel_EAST detector("../../resources/frozen_east_text_detection.pb");
     detector.setConfidenceThreshold(0.5).setNMSThreshold(0.4);
 
     // Parameters for Detection
@@ -40,7 +41,7 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 }
 
 // offset between points, to be equal
-constexpr size_t threshold = 10;
+constexpr size_t threshold = 20;
 
 bool is_equal(cv::Point lhs, cv::Point rhs)
 {
@@ -64,6 +65,38 @@ bool on_line(line l, cv::Point p)
 
 std::vector<line> get_lines(cv::Mat src)
 {
+#ifdef _MSC_VER
+    using namespace cv;
+    using namespace cv::ximgproc;
+
+    int length_threshold = 10;
+    float distance_threshold = 1.41421356f;
+    double canny_th1 = 50.0;
+    double canny_th2 = 50.0;
+    int canny_aperture_size = 3;
+    bool do_merge = true;
+    Ptr<FastLineDetector> fld = createFastLineDetector(
+        length_threshold, distance_threshold, canny_th1, canny_th2, canny_aperture_size, do_merge);
+    std::vector<Vec4f> lines;
+
+    for (int run_count = 0; run_count < 5; run_count++)
+    {
+        double freq = getTickFrequency();
+        lines.clear();
+        int64 start = getTickCount();
+        // Detect the lines with FLD
+        fld->detect(src, lines);
+        double duration_ms = double(getTickCount() - start) * 1000 / freq;
+        std::cout << "Elapsed time for FLD " << duration_ms << " ms." << std::endl;
+    }
+    // Show found lines with FLD
+    Mat line_image_fld(src);
+    fld->drawSegments(line_image_fld, lines);
+    imshow("FLD result", line_image_fld);
+    waitKey();
+    return {};
+#else
+
     // Check if image is loaded fine
     if (src.empty()) return {};
 
@@ -83,4 +116,5 @@ std::vector<line> get_lines(cv::Mat src)
                        return std::pair{cv::Point(l[0], l[1]), cv::Point(l[2], l[3])};
                    });
     return res;
+#endif
 }
