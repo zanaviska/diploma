@@ -38,9 +38,9 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
         }
 
     // if we founded 2 lines -- we found decision block
-    if(neight1 != -1 && neight2 != -1)
+    if (neight1 != -1 && neight2 != -1)
     {
-        child = std::make_shared<::decision>(lines);
+        child = std::make_shared<::decision>(lines, _end, neight1, neight2);
         return;
     }
 

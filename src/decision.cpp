@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-decision::decision(const std::vector<line> lines) : block(block_type::decision)
+decision::decision(const std::vector<line> lines, cv::Point up, int lu, int ru) :
+    block(block_type::decision)
 {
     std::cout << "Added decision making\n";
 }

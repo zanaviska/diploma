@@ -8,5 +8,6 @@ class decision : public block
 public:
     std::shared_ptr<::flowline> truth;
     std::shared_ptr<::flowline> lie;
-    decision(const std::vector<line> lines);
+    // l mean left, r mean right, u mean up
+    decision(const std::vector<line> lines, cv::Point up, int lu, int ru);
 };
