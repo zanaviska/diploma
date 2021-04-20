@@ -4,7 +4,10 @@
 #include <opencv2/dnn.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+
+#ifdef _MSC_VER
 #include <opencv2/ximgproc.hpp>
+#endif
 
 #include <functions.h>
 #include <input.h>
@@ -94,7 +97,7 @@ std::vector<line> get_lines(cv::Mat src)
     fld->drawSegments(line_image_fld, lines);
     std::vector<::line> res;
     res.reserve(lines.size());
-    for(auto &line: lines)
+    for (auto &line : lines)
         res.push_back({cv::Point(line[0], line[1]), cv::Point(line[2], line[3])});
     // for (auto &line : lines)
     //     imshow("FLD result", line_image_fld);
