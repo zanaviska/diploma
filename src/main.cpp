@@ -33,7 +33,6 @@ int main(int argc, char **argv)
         cv::rectangle(src, word.second, cv::Scalar(255, 255, 255), cv::FILLED);
     }
     auto lines = get_lines(src);
-    return 0;
 
     // clear duplicates
     for (size_t i = 0; i < lines.size(); i++)
@@ -180,6 +179,8 @@ int main(int argc, char **argv)
 
     auto start = std::make_shared<terminal>(lines, 0, 1);
 
+    cv::resize(clone, clone, cv::Size(), 0.8, 0.8);
+    cv::resize(src, src, cv::Size(), 0.8, 0.8);
     cv::imshow("", clone);
     cv::imshow("1", src);
     cv::waitKey();
