@@ -51,8 +51,8 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
             child = std::make_shared<flowline>(lines, neight2, lines[neight2].first,
                                                lines[neight2].second);
         else
-            child = std::make_shared<flowline>(lines, neight2, lines[neight2].first,
-                                               lines[neight2].second);
+            child = std::make_shared<flowline>(lines, neight2, lines[neight2].second,
+                                               lines[neight2].first);
         return;
     }
 
