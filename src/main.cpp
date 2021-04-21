@@ -149,7 +149,7 @@ int main(int argc, char **argv)
     std::cout << "lines\n";
     for (size_t i = 0; i < lines.size(); i++)
         std::cout << i << ") " << lines[i].first << ' ' << lines[i].second << '\n';
-    std::cout << std::endl;
+    std::cout << endl;
     for (size_t i = 0; i < lines.size(); i++)
         switch (i)
         {

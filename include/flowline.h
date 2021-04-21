@@ -16,6 +16,6 @@ public:
         block(block_type::flowline), _start{std::move(start)}, _end{std::move(end)}
     {
     }
-    flowline(const std::vector<line> &lines, size_t index, const cv::Point &start,
+    flowline(std::vector<line> &lines, size_t index, const cv::Point &start,
              const cv::Point &end);
 };
