@@ -45,7 +45,7 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 }
 
 // offset between points, to be equal
-constexpr size_t threshold = 20;
+constexpr size_t threshold = 10;
 
 bool is_equal(cv::Point lhs, cv::Point rhs)
 {
