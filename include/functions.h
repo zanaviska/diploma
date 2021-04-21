@@ -13,7 +13,7 @@
 
 using line = std::pair<cv::Point, cv::Point>;
 
-std::vector<line> get_lines(cv::Mat image);
+std::vector<line> get_lines(cv::Mat image, std::string str = "");
 bool is_equal(cv::Point lhs, cv::Point rhs);
 bool on_line(line l, cv::Point p);
 

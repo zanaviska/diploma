@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 
 #include <opencv2/dnn.hpp>
 #include <opencv2/highgui.hpp>
@@ -19,7 +20,7 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
     using namespace cv::dnn;
     int width = 320;
     int height = 320;
-    TextDetectionModel_EAST detector("../../resources/frozen_east_text_detection.pb");
+    TextDetectionModel_EAST detector("../resources/frozen_east_text_detection.pb");
     detector.setConfidenceThreshold(0.5).setNMSThreshold(0.4);
 
     // Parameters for Detection
@@ -66,7 +67,7 @@ bool on_line(line l, cv::Point p)
     return h < threshold;
 }
 
-std::vector<line> get_lines(cv::Mat src)
+std::vector<line> get_lines(cv::Mat src, std::string s)
 {
 #ifdef _MSC_VER
     using namespace cv;
@@ -105,24 +106,15 @@ std::vector<line> get_lines(cv::Mat src)
     return res;
 #else
 
-    // Check if image is loaded fine
-    if (src.empty()) return {};
+    // system("..\\resources\\VS.exe .\\flowchart3.jpg");
+    system(("..\\resources\\VS.exe " + std::move(s)).data());
+    std::vector<::line> res;
+    std::ifstream fin("lines.txt");
+    double x0, y0, x1, y1;
+    while(fin >> x0 >> y0 >> x1 >> y1)
+        res.push_back({cv::Point(x0, y0), cv::Point(x1, y1)});
 
-    cv::Mat dst;
-    // Edge detection
-    cv::Canny(src, dst, 50, 200, 3);
-
-    // Probabilistic Line Transform
-    std::vector<cv::Vec4i> linesP;                        // will hold the results of the detection
-    HoughLinesP(dst, linesP, 1, CV_PI / 180, 50, 30, 10); // runs the actual detection
-
-    // store in res vector
-    std::vector<line> res;
-    res.reserve(linesP.size());
-    std::transform(linesP.begin(), linesP.end(), std::back_inserter(res),
-                   [](cv::Vec4i l) {
-                       return std::pair{cv::Point(l[0], l[1]), cv::Point(l[2], l[3])};
-                   });
+    // std::remove("")
     return res;
 #endif
 }
