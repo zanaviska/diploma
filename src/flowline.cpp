@@ -78,6 +78,9 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
             // if there is less than 2 neighbor lines
             if (l == -1) break;
 
+            //if this is terminal operator
+            if(l >= lines.size() - 3 || r >= lines.size() - 3) break;
+
             line left = lines[l];
             line right = lines[r];
             // if paralelllogram
