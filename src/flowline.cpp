@@ -12,6 +12,8 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
                    const cv::Point &end) :
     block(block_type::flowline)
 {
+    static std::vector<flowline *> visited(lines.size(), nullptr);
+    visited[index] = this;
     std::cout << "Added flowline\n";
 
     _start = std::move(start);
@@ -48,11 +50,9 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
     if (neight2 != -1)
     {
         if (is_equal(_end, lines[neight2].first))
-            child = std::make_shared<flowline>(lines, neight2, lines[neight2].first,
-                                               lines[neight2].second);
+            child = flowline::make(lines, neight2, lines[neight2].first, lines[neight2].second);
         else
-            child = std::make_shared<flowline>(lines, neight2, lines[neight2].second,
-                                               lines[neight2].first);
+            child = flowline::make(lines, neight2, lines[neight2].second, lines[neight2].first);
         return;
     }
 
@@ -113,7 +113,6 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
             else
             // if next elem goes into another flowline
             {
-
             }
 
     // if next element is terminal
@@ -126,4 +125,10 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
         }
     }
     return;
+}
+std::shared_ptr<flowline> flowline::make(const std::vector<line> &lines, size_t index,
+                                         const cv::Point &start, const cv::Point &end)
+{
+    visited[index] = std::make_shared<flowline>(lines, index, start, end);
+    return visited[index];
 }

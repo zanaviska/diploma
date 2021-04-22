@@ -1,7 +1,7 @@
 #include <algorithm>
+#include <filesystem>
 #include <iostream>
 #include <set>
-#include <filesystem>
 
 #include <opencv2/core.hpp>
 #include <opencv2/dnn.hpp>
@@ -9,10 +9,13 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
+#include <flowline.h>
 #include <functions.h>
 #include <terminal.h>
 
 namespace fs = std::filesystem;
+
+std::vector<std::shared_ptr<flowline>> flowline::visited = std::vector<std::shared_ptr<flowline>>();
 
 int main(int argc, char **argv)
 {
@@ -149,7 +152,7 @@ int main(int argc, char **argv)
     std::cout << "lines\n";
     for (size_t i = 0; i < lines.size(); i++)
         std::cout << i << ") " << lines[i].first << ' ' << lines[i].second << '\n';
-    std::cout << endl;
+    std::cout << std::endl;
     for (size_t i = 0; i < lines.size(); i++)
         switch (i)
         {
@@ -180,7 +183,7 @@ int main(int argc, char **argv)
         default:
             cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(150, 150, 150), 3);
         }
-
+    flowline::visited = std::vector<std::shared_ptr<flowline>>(lines.size(), nullptr);
     auto start = std::make_shared<terminal>(lines, 0, 1);
 
     cv::resize(clone, clone, cv::Size(), 0.8, 0.8);

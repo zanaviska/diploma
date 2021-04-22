@@ -71,13 +71,13 @@ decision::decision(const std::vector<line> &lines, cv::Point up, int lu, int ru)
     // add 2 separate childs
     // add truth
     if (is_equal(right_point, lines[r1].first))
-        truth = std::make_shared<::flowline>(lines, r1, right_point, lines[r1].second);
+        truth = flowline::make(lines, r1, right_point, lines[r1].second);
     else
-        truth = std::make_shared<::flowline>(lines, r1, right_point, lines[r1].first);
+        truth = flowline::make(lines, r1, right_point, lines[r1].first);
 
     // add lie
-     if (is_equal(left_point, lines[l1].first))
-         truth = std::make_shared<::flowline>(lines, l1, left_point, lines[l1].second);
-     else
-         truth = std::make_shared<::flowline>(lines, l1, left_point, lines[l1].first);
+    if (is_equal(left_point, lines[l1].first))
+        truth = flowline::make(lines, l1, left_point, lines[l1].second);
+    else
+        truth = flowline::make(lines, l1, left_point, lines[l1].first);
 }
