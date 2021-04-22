@@ -8,11 +8,10 @@
 #include <proccess.h>
 #include <terminal.h>
 
-flowline::flowline(std::vector<line> &lines, size_t index, const cv::Point &start,
+flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point &start,
                    const cv::Point &end) :
     block(block_type::flowline)
 {
-    lines[index].visited = 1;
     std::cout << "Added flowline\n";
 
     _start = std::move(start);
