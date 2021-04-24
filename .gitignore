@@ -59,6 +59,3 @@ tags
 
 # Persistent undo
 [._]*.un~
-
-#vscode cpp extension
-.vscode/c_cpp_properties.json
