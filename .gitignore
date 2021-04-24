@@ -61,4 +61,4 @@ tags
 [._]*.un~
 
 #vscode cpp extension
-c_cpp_properties.json
+.vscode/c_cpp_properties.json
