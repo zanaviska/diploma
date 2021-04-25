@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 #include <opencv2/dnn.hpp>
 #include <opencv2/highgui.hpp>
@@ -20,7 +20,12 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
     using namespace cv::dnn;
     int width = 320;
     int height = 320;
+
+#ifdef _MSC_VER
+    TextDetectionModel_EAST detector("../../resources/frozen_east_text_detection.pb");
+#else
     TextDetectionModel_EAST detector("../resources/frozen_east_text_detection.pb");
+#endif
     detector.setConfidenceThreshold(0.5).setNMSThreshold(0.4);
 
     // Parameters for Detection
@@ -111,7 +116,7 @@ std::vector<line> get_lines(cv::Mat src, std::string s)
     std::vector<::line> res;
     std::ifstream fin("lines.txt");
     double x0, y0, x1, y1;
-    while(fin >> x0 >> y0 >> x1 >> y1)
+    while (fin >> x0 >> y0 >> x1 >> y1)
         res.push_back({cv::Point(x0, y0), cv::Point(x1, y1)});
 
     // std::remove("")
