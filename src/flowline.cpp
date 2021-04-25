@@ -61,7 +61,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
         if (on_line(lines[i], _end) && !is_equal(lines[i].first, _end) &&
             !is_equal(lines[i].second, _end))
             // if next elem goes to block
-            if (is_equal(lines[i].first, cv::Point(lines[i].second.x, lines[i].first.y)))
+            if (is_equal(lines[i].first, cv::Point(lines[i].first.x, lines[i].second.y)))
             {
                 int l = -1, r = -1;
                 for (int j = 2; j < lines.size(); j++)
@@ -81,7 +81,11 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
                 if (l == -1) break;
 
                 // if this is terminal operator
-                if (l >= lines.size() - 3 || r >= lines.size() - 3) break;
+                if (l >= lines.size() - 3 || r >= lines.size() - 3)
+                {
+                    std::cout << "What?\n";
+                    break;
+                }
 
                 line left = lines[l];
                 line right = lines[r];
@@ -113,8 +117,9 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
             else
             // if next elem goes into another flowline
             {
+                std::cout << "insert in line\n";
             }
-
+    std::cout << "bruh\n";
     // if next element is terminal
     for (size_t i = 2; i < lines.size(); i++)
     {
