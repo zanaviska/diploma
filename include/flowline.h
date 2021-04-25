@@ -1,6 +1,6 @@
 #pragma once
 
-#include <queue>
+#include <list>
 
 #include <opencv2/core.hpp>
 
@@ -16,7 +16,7 @@ class flowline : public block
         block(block_type::flowline), _start{std::move(start)}, _end{std::move(end)}
     {
     }
-    inline static std::queue<flowline *> pending;
+    inline static std::list<flowline *> pending;
 
     friend class terminal;
 

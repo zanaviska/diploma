@@ -30,6 +30,17 @@ terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower) :
                 break;
             }
         }
+
+    // and on the end of terminal operator it's time to complete all pending flowline
+    for (auto it = flowline::pending.begin(); it != flowline::pending.end();)
+        for (auto &new_child : flowline::visited)
+            if (new_child && on_line({new_child->_start, new_child->_end}, (*it)->_end))
+            {
+                (*it)->child = new_child;
+                it = flowline::pending.erase(it);
+            }
+            else
+                it++;
 }
 
 terminal::terminal(cv::Point tl, cv::Point br) :

@@ -128,7 +128,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
 
                 // if there is no visited line, which should be our child, add our line to child
                 // pending
-                pending.push(this);
+                pending.push_back(this);
             }
 
     // if next element is terminal
