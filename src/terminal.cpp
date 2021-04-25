@@ -14,7 +14,7 @@ terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower) :
     _br = lo_line.second.x < lo_line.first.x ? lo_line.first : lo_line.second;
 
     // if our terminal isn't last that add child(flowline)
-    if (lines.size() != lower + 1)
+    if (lower + 3 <= lines.size())
         for (size_t i = 2; i < lines.size(); i++)
         {
             if (on_line(lo_line, lines[i].first) && !is_equal(lo_line.first, lines[i].first) &&
