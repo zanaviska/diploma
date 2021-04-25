@@ -18,7 +18,7 @@ class flowline : public block
     }
     inline static std::queue<flowline *> pending;
 
-    friend class decision;
+    friend class terminal;
 
 public:
     static std::vector<std::shared_ptr<flowline>> visited;

@@ -8,7 +8,7 @@
 #include <block.h>
 #include <functions.h>
 
-class terminal: public block
+class terminal : public block
 {
     cv::Point _tl;
     cv::Point _br;
