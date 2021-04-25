@@ -12,8 +12,6 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
                    const cv::Point &end) :
     block(block_type::flowline)
 {
-    static std::vector<flowline *> visited(lines.size(), nullptr);
-    visited[index] = this;
     std::cout << "Added flowline\n";
 
     _start = std::move(start);
@@ -81,11 +79,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
                 if (l == -1) break;
 
                 // if this is terminal operator
-                if (l >= lines.size() - 3 || r >= lines.size() - 3)
-                {
-                    std::cout << "What?\n";
-                    break;
-                }
+                if (l >= lines.size() - 3 || r >= lines.size() - 3) break;
 
                 line left = lines[l];
                 line right = lines[r];
@@ -118,8 +112,25 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
             // if next elem goes into another flowline
             {
                 std::cout << "insert in line\n";
+                // if there is a visited line which we will make our child, than make it
+                for (auto &new_child : visited)
+                    if (new_child)
+                    {
+                        if ((is_equal(new_child->_start, lines[i].first) &&
+                             is_equal(new_child->_end, lines[i].second)) ||
+                            (is_equal(new_child->_start, lines[i].second) &&
+                             is_equal(new_child->_end, lines[i].first)))
+                        {
+                            child = new_child;
+                            return;
+                        }
+                    }
+
+                // if there is no visited line, which should be our child, add our line to child
+                // pending
+                pending.push(this);
             }
-    std::cout << "bruh\n";
+
     // if next element is terminal
     for (size_t i = 2; i < lines.size(); i++)
     {

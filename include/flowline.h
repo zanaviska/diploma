@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include <opencv2/core.hpp>
 
 #include <block.h>
@@ -14,6 +16,9 @@ class flowline : public block
         block(block_type::flowline), _start{std::move(start)}, _end{std::move(end)}
     {
     }
+    inline static std::queue<flowline *> pending;
+
+    friend class decision;
 
 public:
     static std::vector<std::shared_ptr<flowline>> visited;
