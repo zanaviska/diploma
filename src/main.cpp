@@ -158,35 +158,8 @@ int main(int argc, char **argv)
         std::cout << i << ") " << lines[i].first << ' ' << lines[i].second << '\n';
     std::cout << std::endl;
     for (size_t i = 0; i < lines.size(); i++)
-        switch (i)
-        {
-        case 0:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 255, 0), 2);
-            break;
-        case 1:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 0, 255), 2);
-            break;
-        case 2:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 0, 255), 2);
-            break;
-        case 3:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(0, 255, 255), 2);
-            break;
-        case 4:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 0), 2);
-            break;
-        case 5:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 0, 0), 2);
-            break;
-        case 6:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 150, 150), 2);
-            break;
-        case 7:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(150, 255, 150), 2);
-            break;
-        default:
-            cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(150, 150, 150), 3);
-        }
+        cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
+
     flowline::visited = std::vector<std::shared_ptr<flowline>>(lines.size(), nullptr);
     auto start = std::make_shared<terminal>(lines, 0, 1);
 
