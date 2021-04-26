@@ -9,7 +9,7 @@
 #include <terminal.h>
 
 flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point &start,
-                   const cv::Point &end) :
+                   const cv::Point &end, const cv::Mat &image) :
     block(block_type::flowline)
 {
     std::cout << "Added flowline\n";
@@ -40,7 +40,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
     // if we founded 2 lines -- we found decision block
     if (neight1 != -1 && neight2 != -1)
     {
-        child = std::make_shared<::decision>(lines, _end, neight1, neight2);
+        child = std::make_shared<::decision>(lines, _end, neight1, neight2, image);
         return;
     }
 
@@ -48,9 +48,11 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
     if (neight2 != -1)
     {
         if (is_equal(_end, lines[neight2].first))
-            child = flowline::make(lines, neight2, lines[neight2].first, lines[neight2].second);
+            child =
+                flowline::make(lines, neight2, lines[neight2].first, lines[neight2].second, image);
         else
-            child = flowline::make(lines, neight2, lines[neight2].second, lines[neight2].first);
+            child =
+                flowline::make(lines, neight2, lines[neight2].second, lines[neight2].first, image);
         return;
     }
 
@@ -97,13 +99,13 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
                     if (is_equal(left.first, cv::Point(left.second.x, left.first.y)))
                     {
                         // process
-                        child = std::make_shared<::proccess>(lines, i, l, r);
+                        child = std::make_shared<::proccess>(lines, i, l, r, image);
                         return;
                     }
                     else
                     {
                         // input
-                        child = std::make_shared<::input>(lines, i, l, r);
+                        child = std::make_shared<::input>(lines, i, l, r, image);
                         return;
                     }
                 }
@@ -136,15 +138,16 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
     {
         if (on_line(lines[i], end))
         {
-            child = std::make_shared<::terminal>(lines, i, lines.size() - 1);
+            child = std::make_shared<::terminal>(lines, i, lines.size() - 1, image);
             return;
         }
     }
     return;
 }
 std::shared_ptr<flowline> flowline::make(const std::vector<line> &lines, size_t index,
-                                         const cv::Point &start, const cv::Point &end)
+                                         const cv::Point &start, const cv::Point &end,
+                                         const cv::Mat &image)
 {
-    visited[index] = std::make_shared<flowline>(lines, index, start, end);
+    visited[index] = std::make_shared<flowline>(lines, index, start, end, image);
     return visited[index];
 }

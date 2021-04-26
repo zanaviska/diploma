@@ -9,7 +9,7 @@ class input : public block
 {
 public:
     std::shared_ptr<block> child{nullptr};
-    input(const std::vector<line> &lines, int upper, int left, int right);
+    input(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat &);
 };
 
 #endif // PROJECT_INPUT_H

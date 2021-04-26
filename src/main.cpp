@@ -161,7 +161,7 @@ int main(int argc, char **argv)
         cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
 
     flowline::visited = std::vector<std::shared_ptr<flowline>>(lines.size(), nullptr);
-    auto start = std::make_shared<terminal>(lines, 0, 1);
+    auto start = std::make_shared<terminal>(lines, 0, 1, clone);
 
     cv::resize(clone, clone, cv::Size(), 0.8, 0.8);
     cv::resize(src, src, cv::Size(), 0.8, 0.8);

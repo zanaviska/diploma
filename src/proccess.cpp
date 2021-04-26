@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-proccess::proccess(const std::vector<line> &lines, int upper, int left, int right) :
+proccess::proccess(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat & image) :
     block(block_type::proccess)
 {
     std::cout << "make proccess\n";
@@ -15,14 +15,14 @@ proccess::proccess(const std::vector<line> &lines, int upper, int left, int righ
             if (on_line(bottom, lines[i].first) && !is_equal(lines[i].first, bottom.first) &&
                 !is_equal(lines[i].first, bottom.second))
             {
-                child = flowline::make(lines, i, lines[i].first, lines[i].second);
+                child = flowline::make(lines, i, lines[i].first, lines[i].second, image);
                 return;
             }
 
             if (on_line(bottom, lines[i].second) && !is_equal(lines[i].second, bottom.first) &&
                 !is_equal(lines[i].second, bottom.second))
             {
-                child = flowline::make(lines, i, lines[i].second, lines[i].first);
+                child = flowline::make(lines, i, lines[i].second, lines[i].first, image);
                 return;
             }
         }

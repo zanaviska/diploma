@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-decision::decision(const std::vector<line> &lines, cv::Point up, int lu, int ru) :
+decision::decision(const std::vector<line> &lines, cv::Point up, int lu, int ru,
+                   const cv::Mat &image) :
     block(block_type::decision)
 {
     std::cout << "Added decision making\n";
@@ -71,13 +72,13 @@ decision::decision(const std::vector<line> &lines, cv::Point up, int lu, int ru)
     // add 2 separate childs
     // add truth
     if (is_equal(right_point, lines[r1].first))
-        truth = flowline::make(lines, r1, right_point, lines[r1].second);
+        truth = flowline::make(lines, r1, right_point, lines[r1].second, image);
     else
-        truth = flowline::make(lines, r1, right_point, lines[r1].first);
+        truth = flowline::make(lines, r1, right_point, lines[r1].first, image);
 
     // add lie
     if (is_equal(left_point, lines[l1].first))
-        truth = flowline::make(lines, l1, left_point, lines[l1].second);
+        truth = flowline::make(lines, l1, left_point, lines[l1].second, image);
     else
-        truth = flowline::make(lines, l1, left_point, lines[l1].first);
+        truth = flowline::make(lines, l1, left_point, lines[l1].first, image);
 }

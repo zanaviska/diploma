@@ -23,8 +23,9 @@ class flowline : public block
 public:
     static std::vector<std::shared_ptr<flowline>> visited;
     flowline(const std::vector<line> &lines, size_t index, const cv::Point &start,
-             const cv::Point &end);
+             const cv::Point &end, const cv::Mat &);
 
     static std::shared_ptr<flowline> make(const std::vector<line> &lines, size_t index,
-                                          const cv::Point &start, const cv::Point &end);
+                                          const cv::Point &start, const cv::Point &end,
+                                          const cv::Mat &);
 };

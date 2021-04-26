@@ -17,7 +17,7 @@ class terminal : public block
 public:
     std::shared_ptr<block> child;
     terminal(cv::Point tl, cv::Point br);
-    terminal(const std::vector<line> &lines, size_t upper, size_t lower);
+    terminal(const std::vector<line> &lines, size_t upper, size_t lower, const cv::Mat &);
 };
 
 #endif // PROJECT_TERMINAL_H
