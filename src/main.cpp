@@ -20,9 +20,9 @@ std::vector<std::shared_ptr<flowline>> flowline::visited = std::vector<std::shar
 int main(int argc, char **argv)
 {
 #ifdef _MSC_VER
-    std::string image_path = fs::absolute("../../flowchart3.jpg").string();
+    std::string image_path = fs::absolute("../../flowchart4.jpg").string();
 #else
-    std::string image_path = fs::absolute("../flowchart3.jpg").string();
+    std::string image_path = fs::absolute("../flowchart4.jpg").string();
 #endif
     // Loads an image
     cv::Mat src = cv::imread(image_path, cv::IMREAD_GRAYSCALE);
