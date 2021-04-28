@@ -7,6 +7,8 @@
 
 class input : public block
 {
+    std::string _text;
+
 public:
     std::shared_ptr<block> child{nullptr};
     input(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat &);

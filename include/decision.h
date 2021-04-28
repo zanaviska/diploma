@@ -5,6 +5,8 @@
 
 class decision : public block
 {
+    std::string _text;
+
 public:
     std::shared_ptr<::flowline> truth;
     std::shared_ptr<::flowline> lie;
