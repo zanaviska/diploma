@@ -106,7 +106,7 @@ bool on_line(line l, cv::Point p)
         h = std::min(b, c);
     else
         h = 2 * sqrt(per * (per - a) * (per - b) * (per - c)) / a;
-    // std::cout << h << '\n';
+        
     return h < threshold;
 }
 
