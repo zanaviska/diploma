@@ -12,7 +12,6 @@ class terminal : public block
 {
     cv::Point _tl;
     cv::Point _br;
-    const std::string _text;
 
 public:
     std::shared_ptr<block> child;
