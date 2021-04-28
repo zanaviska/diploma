@@ -49,11 +49,42 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
     return res;
 }
 
-std::string text_recognitor(const cv::Mat *text_image) 
+std::string text_recognitor(const cv::Mat &text_image)
 {
-    std::string rec_model_path = "";
+    static bool first_time = true;
 
-    cv::dnn::TextRecognitionModel recognizer(rec_model_path);
+#ifdef _MSC_VER
+    std::string rec_model_path = "../../resources/crnn_cs.onnx";
+#else
+    std::string rec_model_path = "../resources/crnn_cs.onnx";
+#endif
+
+    static cv::dnn::TextRecognitionModel recognizer(rec_model_path);
+    if (first_time)
+    {
+        // Load vocabulary
+        std::ifstream voc_file;
+#ifdef _MSC_VER
+        voc_file.open("../../resources/alphabet_94.txt");
+#else
+        voc_file.open("../resources/alphabet_94.txt");
+#endif
+        CV_Assert(voc_file.is_open());
+        std::string voc_line;
+        std::vector<std::string> vocabulary;
+        while (std::getline(voc_file, voc_line))
+        {
+            vocabulary.push_back(std::move(voc_line));
+        }
+        recognizer.setVocabulary(vocabulary);
+        recognizer.setDecodeType("CTC-greedy");
+        // Parameters for Recognition
+        double recScale = 1.0 / 127.5;
+        cv::Scalar rec_mean = cv::Scalar(127.5, 127.5, 127.5);
+        cv::Size rec_input_size = cv::Size(100, 32);
+        recognizer.setInputParams(recScale, rec_input_size, rec_mean);
+    }
+    std::string recognition_result = recognizer.recognize(text_image);
 }
 
 // offset between points, to be equal

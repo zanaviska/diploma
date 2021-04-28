@@ -14,4 +14,4 @@ bool is_equal(cv::Point lhs, cv::Point rhs);
 bool on_line(line l, cv::Point p);
 
 std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image);
-std::string text_recognitor(const cv::Mat *);
+std::string text_recognitor(const cv::Mat &);
