@@ -14,6 +14,8 @@ terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower,
     _tl = up_line.first.x < up_line.second.x ? up_line.first : up_line.second;
     _br = lo_line.second.x < lo_line.first.x ? lo_line.first : lo_line.second;
 
+    std::cout << text_recognitor(image(cv::Rect(_tl, _br))) << '\n';
+
     // if our terminal isn't last that add child(flowline)
     if (lower + 3 <= lines.size())
         for (size_t i = 2; i < lines.size(); i++)
@@ -45,6 +47,6 @@ terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower,
 }
 
 terminal::terminal(cv::Point tl, cv::Point br) :
-    block(block_type::terminal), _tl{std::move(tl)}, _br{std::move(br)}, _text{""}
+    block(block_type::terminal), _tl{std::move(tl)}, _br{std::move(br)}
 {
 }
