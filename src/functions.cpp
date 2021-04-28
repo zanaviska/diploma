@@ -49,6 +49,13 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
     return res;
 }
 
+std::string text_recognitor(const cv::Mat *text_image) 
+{
+    std::string rec_model_path = "";
+
+    cv::dnn::TextRecognitionModel recognizer(rec_model_path);
+}
+
 // offset between points, to be equal
 constexpr size_t threshold = 10;
 
