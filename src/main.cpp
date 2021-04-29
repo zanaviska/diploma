@@ -152,15 +152,16 @@ int main(int argc, char **argv)
                 }
             break;
         }
-
     std::cout << "lines\n";
     for (size_t i = 0; i < lines.size(); i++)
         std::cout << i << ") " << lines[i].first << ' ' << lines[i].second << '\n';
     std::cout << std::endl;
     for (size_t i = 0; i < lines.size(); i++)
-        cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
+        cv::line(src, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
+    // cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
 
     flowline::visited = std::vector<std::shared_ptr<flowline>>(lines.size(), nullptr);
+    // auto start = std::make_shared<terminal>(lines, 0, 1, src);
     auto start = std::make_shared<terminal>(lines, 0, 1, clone);
 
     cv::resize(clone, clone, cv::Size(), 0.8, 0.8);
