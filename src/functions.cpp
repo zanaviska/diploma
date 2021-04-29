@@ -85,6 +85,7 @@ std::string text_recognitor(const cv::Mat &text_image)
         recognizer.setInputParams(recScale, rec_input_size, rec_mean);
     }
     std::string recognition_result = recognizer.recognize(text_image);
+    return recognition_result;
 }
 
 // offset between points, to be equal
@@ -106,7 +107,7 @@ bool on_line(line l, cv::Point p)
         h = std::min(b, c);
     else
         h = 2 * sqrt(per * (per - a) * (per - b) * (per - c)) / a;
-        
+
     return h < threshold;
 }
 
