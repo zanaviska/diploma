@@ -136,7 +136,8 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
     // if next element is terminal
     for (size_t i = 2; i < lines.size(); i++)
     {
-        if (on_line(lines[i], end))
+        if (on_line(lines[i], _end) && !is_equal(lines[i].first, _end) &&
+            !is_equal(lines[i].second, _end))
         {
             child = std::make_shared<::terminal>(lines, i, lines.size() - 1, image);
             return;
