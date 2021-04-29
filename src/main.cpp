@@ -36,12 +36,14 @@ int main(int argc, char **argv)
     cv::Mat clone;
     cv::cvtColor(src, clone, cv::COLOR_GRAY2BGR);
 
-    // fill waord with white color
+    // fill word with white color
+    std::cout << "aaaaa\n";
     auto words = text_getter(clone);
     for (auto word : words)
     {
-        cv::rectangle(clone, word.second, cv::Scalar(0, 0, 255), cv::FILLED);
+        cv::rectangle(clone, word.second, cv::Scalar(255, 255, 255), cv::FILLED);
         cv::rectangle(src, word.second, cv::Scalar(255, 255, 255), cv::FILLED);
+        std::cout << word.second << '\n';
     }
     auto lines = get_lines(src, image_path);
 

@@ -41,7 +41,7 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 
     std::vector<std::pair<std::string, cv::Rect>> res;
     res.reserve(detResults.size());
-
+    std::cout << detResults.size() << '\n';
     for (auto &i : detResults)
     {
         auto r = boundingRect(i);
