@@ -44,7 +44,8 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 
     for (auto &i : detResults)
     {
-        res.push_back({"", boundingRect(i)});
+        auto r = boundingRect(i);
+        res.push_back({text_recognitor(image(r)), r});
     }
     return res;
 }
@@ -52,7 +53,7 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 std::string text_recognitor(const cv::Mat &text_image)
 {
     static bool first_time = true;
-
+    cv::imshow("2", text_image);
 #ifdef _MSC_VER
     std::string rec_model_path = "../../resources/crnn_cs.onnx";
 #else
