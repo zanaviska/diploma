@@ -5,7 +5,7 @@
 proccess::proccess(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat & image) :
     block(block_type::proccess)
 {
-    std::cout << "make proccess\n";
+//    std::cout << "make proccess\n";
     int diff = std::abs(lines[left].first.y - lines[left].second.y);
     line bottom = {cv::Point(lines[upper].first.x, lines[upper].first.y + diff),
                    cv::Point(lines[upper].second.x, lines[upper].first.y + diff)};

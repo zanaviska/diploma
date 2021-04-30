@@ -5,7 +5,7 @@
 
 class decision : public block
 {
-    std::string _text;
+    std::string _text{"decision"};
 
 public:
     std::shared_ptr<::flowline> truth;

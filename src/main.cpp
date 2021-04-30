@@ -37,7 +37,6 @@ int main(int argc, char **argv)
     cv::cvtColor(src, clone, cv::COLOR_GRAY2BGR);
 
     // fill word with white color
-    std::cout << "aaaaa\n";
     auto words = text_getter(clone);
     for (auto word : words)
     {
@@ -154,10 +153,7 @@ int main(int argc, char **argv)
                 }
             break;
         }
-    std::cout << "lines\n";
-    for (size_t i = 0; i < lines.size(); i++)
-        std::cout << i << ") " << lines[i].first << ' ' << lines[i].second << '\n';
-    std::cout << std::endl;
+
     for (size_t i = 0; i < lines.size(); i++)
         cv::line(src, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
     // cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
@@ -166,10 +162,13 @@ int main(int argc, char **argv)
     // auto start = std::make_shared<terminal>(lines, 0, 1, src);
     auto start = std::make_shared<terminal>(lines, 0, 1, clone);
 
+    std::string translate{""};
+    block::
+
     cv::resize(clone, clone, cv::Size(), 0.8, 0.8);
     cv::resize(src, src, cv::Size(), 0.8, 0.8);
     cv::imshow("", clone);
     cv::imshow("1", src);
-    cv::waitKey();
+    cv::waitKey(1000);
     return 0;
 }

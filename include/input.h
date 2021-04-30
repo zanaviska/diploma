@@ -7,7 +7,7 @@
 
 class input : public block
 {
-    std::string _text;
+    std::string _text{"input"};
 
 public:
     std::shared_ptr<block> child{nullptr};

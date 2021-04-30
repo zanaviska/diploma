@@ -8,15 +8,15 @@ terminal::terminal(const std::vector<line> &lines, size_t upper, size_t lower,
     block(block_type::terminal)
 {
 
-    std::cout << "\nAdded terminal1\n";
+//    std::cout << "\nAdded terminal1\n";
     const line &up_line = lines[upper];
     const line &lo_line = lines[lower];
 
     _tl = up_line.first.x < up_line.second.x ? up_line.first : up_line.second;
     _br = lo_line.second.x < lo_line.first.x ? lo_line.first : lo_line.second;
 
-    for (auto &i : text_getter(image(cv::Rect(_tl, _br))))
-        std::cout << i.first << ' ' << i.second << '\n';
+//    for (auto &i : text_getter(image(cv::Rect(_tl, _br))))
+//        std::cout << i.first << ' ' << i.second << '\n';
     // std::cout << text_recognitor(image(cv::Rect(_tl, _br))) << '|' << '\n';
 
     // if our terminal isn't last that add child(flowline)

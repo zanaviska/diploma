@@ -5,7 +5,7 @@
 input::input(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat & image) :
     block(block_type::input)
 {
-    std::cout << "Added input\n";
+//    std::cout << "Added input\n";
 
     line l = lines[left];
     const line &u = lines[upper];

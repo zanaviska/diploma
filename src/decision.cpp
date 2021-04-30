@@ -6,7 +6,7 @@ decision::decision(const std::vector<line> &lines, cv::Point up, int lu, int ru,
                    const cv::Mat &image) :
     block(block_type::decision)
 {
-    std::cout << "Added decision making\n";
+//    std::cout << "Added decision making\n";
     // swap left and right side so it is really left and right
     if (std::max(lines[ru].first.x, lines[ru].second.x) <
         std::max(lines[lu].first.x, lines[lu].second.x))
