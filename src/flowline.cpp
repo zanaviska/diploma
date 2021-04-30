@@ -156,6 +156,7 @@ std::shared_ptr<flowline> flowline::make(const std::vector<line> &lines, size_t 
 void flowline::translate(std::shared_ptr<flowline> node, std::vector<std::string> &str)
 {
     // every flowline should have child
+    if (!node) throw std::invalid_argument("wrong flowline");
     if (!node->child) throw std::invalid_argument("wrong flowline");
 
     // add label to current point

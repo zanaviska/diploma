@@ -10,7 +10,7 @@ class input : public block
     std::string _text{"input"};
 
 public:
-    std::shared_ptr<block> child{nullptr};
+    std::shared_ptr<::flowline> child{nullptr};
     input(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat &);
 
     static void translate(std::shared_ptr<input>, std::vector<std::string>&);
