@@ -56,6 +56,6 @@ terminal::terminal(cv::Point tl, cv::Point br) :
 void terminal::translate(std::shared_ptr<terminal> node, std::vector<std::string> &res)
 {
     res.emplace_back("label_" + std::to_string((size_t)node.get()) + ":");
-    if(node)
+    if(node->child)
         flowline::translate(node->child, res);
 }
