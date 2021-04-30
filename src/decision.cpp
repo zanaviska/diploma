@@ -78,13 +78,21 @@ decision::decision(const std::vector<line> &lines, cv::Point up, int lu, int ru,
 
     // add lie
     if (is_equal(left_point, lines[l1].first))
-        truth = flowline::make(lines, l1, left_point, lines[l1].second, image);
+        lie = flowline::make(lines, l1, left_point, lines[l1].second, image);
     else
-        truth = flowline::make(lines, l1, left_point, lines[l1].first, image);
+        lie = flowline::make(lines, l1, left_point, lines[l1].first, image);
 }
 
 
 void decision::translate(std::shared_ptr<decision> node, std::vector<std::string> &res)
 {
     res.emplace_back("label_" + std::to_string((size_t)node.get()) + ":");
+
+    res.emplace_back("if(" + node->_text + ")");
+    res.emplace_back("\tgoto label_" + std::to_string((size_t)node->truth.get()));
+    res.emplace_back("else");
+    res.emplace_back("\tgoto label_" + std::to_string((size_t)node->lie.get()));
+
+    flowline::translate(node->truth, res);
+    flowline::translate(node->lie, res);
 }
