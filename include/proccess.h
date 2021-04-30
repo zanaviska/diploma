@@ -12,4 +12,6 @@ class proccess : public block
 public:
     std::shared_ptr<::flowline> child{nullptr};
     proccess(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat &);
+
+    static void translate(std::shared_ptr<proccess>, std::vector<std::string>&);
 };

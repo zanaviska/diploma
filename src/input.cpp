@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-input::input(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat & image) :
+input::input(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat &image) :
     block(block_type::input)
 {
-//    std::cout << "Added input\n";
+    //    std::cout << "Added input\n";
 
     line l = lines[left];
     const line &u = lines[upper];
@@ -37,4 +37,9 @@ input::input(const std::vector<line> &lines, int upper, int left, int right, con
                 return;
             }
         }
+}
+
+void input::translate(std::shared_ptr<input> node, std::vector<std::string> &res)
+{
+    res.emplace_back("label_" + std::to_string((size_t)node.get()) + ":");
 }

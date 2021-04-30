@@ -12,7 +12,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
                    const cv::Point &end, const cv::Mat &image) :
     block(block_type::flowline)
 {
-//    std::cout << "Added flowline\n";
+    //    std::cout << "Added flowline\n";
 
     _start = std::move(start);
     _end = std::move(end);
@@ -113,7 +113,7 @@ flowline::flowline(const std::vector<line> &lines, size_t index, const cv::Point
             else
             // if next elem goes into another flowline
             {
-//                std::cout << "insert in line\n";
+                //                std::cout << "insert in line\n";
                 // if there is a visited line which we will make our child, than make it
                 for (auto &new_child : visited)
                     if (new_child)
@@ -151,4 +151,17 @@ std::shared_ptr<flowline> flowline::make(const std::vector<line> &lines, size_t 
 {
     visited[index] = std::make_shared<flowline>(lines, index, start, end, image);
     return visited[index];
+}
+
+void flowline::translate(std::shared_ptr<flowline> node, std::vector<std::string> &str)
+{
+    // every flowline should have child
+    if (!node->child) throw std::invalid_argument("wrong flowline");
+
+    // add label to current point
+    str.emplace_back("label_" + std::to_string((size_t)node.get()) + ':');
+
+    // add jump to child
+    str.emplace_back("goto label_" + std::to_string((size_t)node->child.get()));
+    block::translate(node->child, str);
 }

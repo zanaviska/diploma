@@ -82,3 +82,9 @@ decision::decision(const std::vector<line> &lines, cv::Point up, int lu, int ru,
     else
         truth = flowline::make(lines, l1, left_point, lines[l1].first, image);
 }
+
+
+void decision::translate(std::shared_ptr<decision> node, std::vector<std::string> &res)
+{
+    res.emplace_back("label_" + std::to_string((size_t)node.get()) + ":");
+}

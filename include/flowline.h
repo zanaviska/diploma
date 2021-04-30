@@ -28,4 +28,5 @@ public:
     static std::shared_ptr<flowline> make(const std::vector<line> &lines, size_t index,
                                           const cv::Point &start, const cv::Point &end,
                                           const cv::Mat &);
+    static void translate(std::shared_ptr<flowline>, std::vector<std::string>&);
 };

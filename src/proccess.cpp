@@ -27,3 +27,9 @@ proccess::proccess(const std::vector<line> &lines, int upper, int left, int righ
             }
         }
 }
+
+
+void proccess::translate(std::shared_ptr<proccess> node, std::vector<std::string> &res)
+{
+    res.emplace_back("label_" + std::to_string((size_t)node.get()) + ":");
+}

@@ -12,6 +12,8 @@ class input : public block
 public:
     std::shared_ptr<block> child{nullptr};
     input(const std::vector<line> &lines, int upper, int left, int right, const cv::Mat &);
+
+    static void translate(std::shared_ptr<input>, std::vector<std::string>&);
 };
 
 #endif // PROJECT_INPUT_H
