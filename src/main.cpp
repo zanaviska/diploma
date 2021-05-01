@@ -164,6 +164,7 @@ int main(int argc, char **argv)
 
     std::vector<std::string> translate;
     terminal::translate(start, translate);
+    short_form(translate);
 
     for(auto &i: translate)
         std::cout << i << '\n';

@@ -163,3 +163,8 @@ std::vector<line> get_lines(cv::Mat src, std::string s)
     return res;
 #endif
 }
+
+void short_form(std::vector<std::string>& text)
+{
+
+}
