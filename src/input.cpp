@@ -43,5 +43,7 @@ void input::translate(std::shared_ptr<input> node, std::vector<std::string> &res
 {
     res.emplace_back("label_" + std::to_string((size_t)node.get()) + ":");
     res.emplace_back("input " + node->_text);
+    res.emplace_back("goto label_" + std::to_string((size_t)node->child.get()));
+
     flowline::translate(node->child, res);
 }

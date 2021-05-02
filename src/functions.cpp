@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 
 #include <opencv2/dnn.hpp>
-#include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
 #ifdef _MSC_VER
@@ -164,7 +164,11 @@ std::vector<line> get_lines(cv::Mat src, std::string s)
 #endif
 }
 
-void short_form(std::vector<std::string>& text)
+std::vector<std::string> short_form(const std::vector<std::string>& text)
 {
+    std::map<std::string, size_t> cnt;
 
+    //count each element
+    for(auto &i: text)
+        cnt[i]++;
 }
