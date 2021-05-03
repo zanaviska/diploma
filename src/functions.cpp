@@ -159,7 +159,7 @@ std::vector<line> get_lines(cv::Mat src, std::string s)
     while (fin >> x0 >> y0 >> x1 >> y1)
         res.push_back({cv::Point(x0, y0), cv::Point(x1, y1)});
 
-    // std::remove("")
+    std::remove("..\\bin\\lines.txt");
     return res;
 #endif
 }
