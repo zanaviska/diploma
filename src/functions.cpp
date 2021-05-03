@@ -41,7 +41,7 @@ std::vector<std::pair<std::string, cv::Rect>> text_getter(cv::Mat image)
 
     std::vector<std::pair<std::string, cv::Rect>> res;
     res.reserve(detResults.size());
-//    std::cout << detResults.size() << '\n';
+    //    std::cout << detResults.size() << '\n';
     for (auto &i : detResults)
     {
         auto r = boundingRect(i);
@@ -164,11 +164,21 @@ std::vector<line> get_lines(cv::Mat src, std::string s)
 #endif
 }
 
-std::vector<std::string> short_form(const std::vector<std::string>& text)
+std::vector<std::string> short_form(const std::vector<std::string> &text)
 {
     std::map<std::string, size_t> cnt;
 
-    //count each element
-    for(auto &i: text)
+    // count each element
+    for (auto &i : text)
         cnt[i]++;
+
+    std::vector<std::string> res;
+
+    for (size_t i = 1; i < text.size(); i++)
+        if (text[i].starts_with("goto label_") && i != text.size() - 1 &&
+            text[i].substr(5) == text[i + 1].substr(0, text[i + 1].size() - 1) && cnt[text[i]] == 1)
+            i++;
+        else
+            res.push_back(text[i]);
+    return res;
 }

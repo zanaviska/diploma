@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <map>
 
 #include <decision.h>
 #include <input.h>
@@ -153,16 +154,22 @@ std::shared_ptr<flowline> flowline::make(const std::vector<line> &lines, size_t 
     return visited[index];
 }
 
-void flowline::translate(std::shared_ptr<flowline> node, std::vector<std::string> &str)
+void flowline::translate(std::shared_ptr<flowline> node, std::vector<std::string> &res)
 {
+    //if we were here, end
+    static std::map<flowline*, bool> visited;
+    if(visited[node.get()]) return;
+
+    visited[node.get()] = true;
+
     // every flowline should have child
     if (!node) throw std::invalid_argument("wrong flowline");
     if (!node->child) throw std::invalid_argument("wrong flowline");
 
     // add label to current point
-    str.emplace_back("label_" + std::to_string((size_t)node.get()) + ':');
+    res.emplace_back("label_" + std::to_string((size_t)node.get()) + ':');
 
     // add jump to child
-    str.emplace_back("goto label_" + std::to_string((size_t)node->child.get()));
-    block::translate(node->child, str);
+    res.emplace_back("goto label_" + std::to_string((size_t)node->child.get()));
+    block::translate(node->child, res);
 }

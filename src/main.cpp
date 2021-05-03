@@ -164,11 +164,14 @@ int main(int argc, char **argv)
 
     std::vector<std::string> translate;
     terminal::translate(start, translate);
-    short_form(translate);
 
-    for(auto &i: translate)
+//    for(auto &i: translate)
+//        std::cerr << i << '\n';
+
+    std::cout << "\n\n";
+    for(auto &i: short_form(translate))
         std::cout << i << '\n';
-
+;
 //    cv::resize(clone, clone, cv::Size(), 0.8, 0.8);
 //    cv::resize(src, src, cv::Size(), 0.8, 0.8);
 //    cv::imshow("", clone);
