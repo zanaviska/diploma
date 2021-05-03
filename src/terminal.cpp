@@ -60,5 +60,8 @@ void terminal::translate(std::shared_ptr<terminal> node, std::vector<std::string
     {
         res.emplace_back("goto label_" + std::to_string((size_t)node->child.get()));
         flowline::translate(node->child, res);
+        res.emplace_back("label_exit:");
     }
+    else
+        res.emplace_back("goto label_exit");
 }
