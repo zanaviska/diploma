@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <iostream>
 #include <set>
+#include <fstream>
 
 #include <opencv2/core.hpp>
 #include <opencv2/dnn.hpp>
@@ -19,13 +20,17 @@ std::vector<std::shared_ptr<flowline>> flowline::visited = std::vector<std::shar
 
 int main(int argc, char **argv)
 {
-#ifdef _MSC_VER
-    std::string image_path = fs::absolute("../../flowchart4.jpg").string();
-#else
-    std::string image_path = fs::absolute("../flowchart4.jpg").string();
-#endif
+    if(argc < 3)
+    {
+        std::cerr << "wrong usage. Usage:\n./project <path to image> <path to output>";
+        return -1;
+    }
+
+    std::string image_path = fs::absolute(argv[1]).string();
+
     // Loads an image
     cv::Mat src = cv::imread(image_path, cv::IMREAD_GRAYSCALE);
+
     // Check if image is loaded fine
     if (src.empty())
     {
@@ -96,9 +101,6 @@ int main(int argc, char **argv)
                          on_line({lines[i].first, lines[j].second}, lines[j].first) &&
                          on_line(lines[i], lines[j].first))
                 {
-                    std::cout << "merge is here\n"
-                              << lines[i].first << ' ' << lines[i].second << '\n'
-                              << lines[j].first << ' ' << lines[j].second << "\n\n";
                     lines[i].second = lines[j].second;
                     swap(lines[j], lines.back());
                     lines.pop_back();
@@ -156,26 +158,17 @@ int main(int argc, char **argv)
 
     for (size_t i = 0; i < lines.size(); i++)
         cv::line(src, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
-    // cv::line(clone, lines[i].first, lines[i].second, cv::Scalar(255, 255, 255), 7);
 
     flowline::visited = std::vector<std::shared_ptr<flowline>>(lines.size(), nullptr);
-    // auto start = std::make_shared<terminal>(lines, 0, 1, src);
+
     auto start = std::make_shared<terminal>(lines, 0, 1, clone);
 
     std::vector<std::string> translate;
     terminal::translate(start, translate);
 
-//    for(auto &i: translate)
-//        std::cerr << i << '\n';
-
-    std::cout << "\n\n";
+    std::ofstream fout(argv[2]);
     for(auto &i: short_form(translate))
-        std::cout << i << '\n';
-;
-//    cv::resize(clone, clone, cv::Size(), 0.8, 0.8);
-//    cv::resize(src, src, cv::Size(), 0.8, 0.8);
-//    cv::imshow("", clone);
-//    cv::imshow("1", src);
-//    cv::waitKey(1000);
+        fout << i << '\n';
+
     return 0;
 }
