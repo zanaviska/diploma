@@ -1,0 +1,2 @@
+- Add output to input block
+- Add text reader to every block
